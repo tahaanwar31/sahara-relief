@@ -17,3 +17,4 @@ service/storage/
 .layout.log
 web/scripts/_*
 deploy/
+video/out/
