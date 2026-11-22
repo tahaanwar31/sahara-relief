@@ -81,7 +81,8 @@ const liveTransport: Transport = async (req, tok) => {
   if (req.form) body = req.form
   else if (req.body !== undefined) { headers['Content-Type'] = 'application/json'; body = JSON.stringify(req.body) }
   const ctl = new AbortController()
-  const timer = setTimeout(() => ctl.abort(), 20000)
+  // 75 s: a free host can need about a minute to wake up, and a slow answer is not the same as "no signal"
+  const timer = setTimeout(() => ctl.abort(), 75000)
   try {
     const r = await fetch(buildUrl(req.path, req.query), { method: req.method, headers, body, signal: ctl.signal })
     let json: unknown = null

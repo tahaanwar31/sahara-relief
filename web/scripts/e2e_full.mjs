@@ -276,6 +276,17 @@ try {
     const d = await api('zainab', 'GET', '/cases/' + c.id)
     assert.ok((d.json.documents ?? []).some((x) => x.doc_type === 'cnic_front'), 'the queued photo was sent after the signal came back: ' + JSON.stringify((d.json.documents ?? []).map((x) => x.doc_type)))
   })
+  await check('a slow or unreachable service does not leave the app stuck on "No signal": it recovers by itself', async () => {
+    const p = await open('zainab', '#/consents')
+    const state = async () => p.getByTestId('signal').locator('[data-online]').first().getAttribute('data-online')
+    await p.getByTestId('signal').waitFor({ timeout: 30000 }); await p.waitForTimeout(2000)
+    await p.route('**/localhost:8000/**', (route) => route.abort('failed'))        // the browser keeps its internet; only the service stops answering
+    await p.reload(); await p.getByTestId('signal').waitFor({ timeout: 30000 }); await p.waitForTimeout(2500)
+    assert.equal(await state(), '0', 'the app shows offline while the service is unreachable')
+    await p.unroute('**/localhost:8000/**')
+    await p.waitForTimeout(12000)                                                  // nobody reloads: the app asks the service itself
+    assert.equal(await state(), '1', 'back online by itself')
+  })
   await check('offline: asked-for paper is resent (queued) and the claim is sent after the signal returns', async () => {
     await reset()
     // set the case up through the API, then ask for the front as the admin

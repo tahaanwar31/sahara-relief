@@ -2,8 +2,9 @@
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { openDB } from 'idb'
 import { api, NetworkError, request, newKey } from '../api'
+import { API_BASE, API_MODE } from '../api/client'
 import { createOutbox, type OutboxOp } from './outbox'
-import { isOnline, subscribeNet } from './net'
+import { isOnline, reportNetwork, subscribeNet } from './net'
 import type { CaseDetail, DocAnalysis, DocType, DraftSaved } from '../api/types'
 
 /** How one waiting op is really sent. */
@@ -121,8 +122,17 @@ export function startOutboxRunner() {
   if (started || typeof window === 'undefined') return
   started = true
   const go = () => { if (isOnline()) void outbox.flush().catch(() => {}) }
+  // If the app believes "no signal" but the browser still has a connection (a request timed out, the server was waking up),
+  // ask the service directly. Without this the app could stay on "no signal" for ever, because nothing else tries again.
+  const recover = async () => {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return          // really offline: wait for the browser's own event
+    if (isOnline() || API_MODE !== 'live') return
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 20000)
+    try { await fetch(API_BASE + '/healthz', { cache: 'no-store', signal: ctl.signal }); reportNetwork(true) } catch { /* still unreachable */ }
+    finally { clearTimeout(t) }
+  }
   window.addEventListener('online', go)
   subscribeNet(go)
-  setInterval(async () => { if ((await outbox.list()).length) go() }, 8000)
+  setInterval(async () => { await recover(); if ((await outbox.list()).length) go() }, 8000)
   go()
 }
