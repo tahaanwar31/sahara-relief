@@ -1,0 +1,23 @@
+# Pinned to the versions this service was built and tested with (Python 3.14 venv).
+# The Docker image uses Python 3.12: if a pin has no 3.12 wheel, loosen it (not verified).
+fastapi==0.115.6
+starlette==0.41.3
+uvicorn==0.34.0
+pydantic==2.14.3
+httpx==0.28.1
+numpy==2.5.4
+scipy==1.18.1
+scikit-learn==1.9.1
+joblib==1.6.0
+# database layer (REQUIRED)
+psycopg[binary]==3.3.9
+# optional extras (every feature degrades gracefully without them)
+python-multipart==0.0.34
+rapidfuzz==3.14.6
+jellyfish==1.3.0
+pillow==13.0.0
+# card reading (OCR) and face matching: both degrade gracefully when missing (a person looks instead)
+rapidocr-onnxruntime==1.2.3
+opencv-python==5.1.0.95
+# tests
+pytest==8.3.4

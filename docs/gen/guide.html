@@ -1,0 +1,999 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Sahara Relief: Instruction Manual</title><style>
+@page { size: A4; margin: 16mm 14mm 18mm 14mm; }
+* { box-sizing: border-box; }
+body { font-family: "Segoe UI", Arial, "Noto Naskh Arabic", sans-serif; font-size: 10pt; line-height: 1.5; color: #14211f; }
+.pagebreak { page-break-after: always; }
+.cover { text-align: center; padding: 70mm 10mm 0; }
+.cover h1 { font-size: 34pt; color: #0b4f4a; border: none; margin: 0; }
+.cover h2 { font-size: 20pt; color: #c8963e; border: none; margin: 6px 0 24px; }
+.cover p { font-size: 11.5pt; }
+h1 { font-size: 21pt; color: #0b4f4a; border-bottom: 3px solid #0f6f66; padding-bottom: 6px; margin-top: 8px; page-break-after: avoid; }
+h2 { font-size: 15pt; color: #0b4f4a; margin-top: 24px; border-bottom: 1px solid #cfdad7; padding-bottom: 3px; page-break-after: avoid; }
+h3 { font-size: 11.8pt; color: #17312f; margin-top: 16px; page-break-after: avoid; }
+a { color: #0f6f66; text-decoration: none; }
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 8.3pt; }
+tr { page-break-inside: avoid; }
+th { background: #0f6f66; color: #fff; text-align: left; }
+th, td { border: 1px solid #c6d3d0; padding: 3.5px 6px; vertical-align: top; word-break: break-word; }
+tr:nth-child(even) td { background: #f4f8f7; }
+code { background: #eaf1ef; padding: 1px 4px; border-radius: 3px; font-size: 8.4pt; word-break: break-word; }
+pre { background: #eaf1ef; padding: 8px; white-space: pre-wrap; font-size: 8.2pt; page-break-inside: avoid; }
+pre code { background: none; padding: 0; }
+blockquote { border-left: 4px solid #0f6f66; margin: 8px 0; padding: 4px 12px; background: #f4f8f7; }
+hr { border: none; border-top: 1px solid #cfdad7; margin: 18px 0; }
+li { margin: 2px 0; }
+svg { page-break-inside: avoid; }
+.toc div { padding: 2px 0; }
+.toc1 { font-weight: 700; margin-top: 8px; font-size: 10.5pt; }
+.toc2 { margin-left: 16px; font-size: 9.5pt; }
+</style></head><body><h1 id="sahara-relief-platform-the-complete-guide">Sahara Relief Platform: The Complete Guide</h1>
+<p><strong>Written for someone who knows nothing about the project.</strong> Every word is meant to be simple. If a word is new, the glossary at the end explains it.</p>
+<blockquote>
+<p><strong>PROTOTYPE. Not a real government service.</strong> Every person, ID number, payment and message in this project is made up (synthetic). Nothing here is real data. Built for <strong>Coder&#39;s Cup &#39;26: &quot;The Last Mile: AI on Public Rails&quot;</strong> (ACM, FAST-NUCES Karachi).</p>
+</blockquote>
+<hr>
+<h2 id="1-what-is-this-project-in-one-minute">1. What is this project, in one minute</h2>
+<p>Imagine a government gives a <strong>cash relief payment</strong> to poor families every three months (we call the programme <strong>&quot;Sahara Relief Programme&quot;</strong>; it is made up). Many of the women who should get this money:</p>
+<ul>
+<li><strong>cannot read</strong> well,</li>
+<li><strong>have a weak phone signal</strong>,</li>
+<li>have <strong>their name spelled three different ways</strong> in different government records (Muhammad, Mohammad, Muhammed),</li>
+<li>and get <strong>fake &quot;relief payment&quot; SMS messages</strong> from scammers, so nobody is sure what is real.</li>
+</ul>
+<p>Our platform is a <strong>website and app</strong> that helps such a woman (and a community helper who sits next to her) <strong>claim her payment from start to end</strong>. It also gives the government staff the tools to check claims <strong>fairly, safely and with a record of every step</strong>.</p>
+<p>The platform does four big things:</p>
+<ol>
+<li><strong>Decides.</strong> It looks at a claim and says: approve, ask for more proof, or send to a person.</li>
+<li><strong>Explains.</strong> Every decision comes with plain reasons, in Urdu and English.</li>
+<li><strong>Protects.</strong> It guards people&#39;s private data, catches scams and fake papers, and keeps a record nobody can edit.</li>
+<li><strong>Says &quot;I am not sure&quot;.</strong> When it is not sure, it does <strong>not guess</strong>. It hands the case to a human.</li>
+</ol>
+<p>This is <strong>not a chatbot</strong>. It is a full multi-user system with different accounts, rules, cases, consent, and an audit trail.</p>
+<hr>
+<h2 id="1a-the-real-numbers-behind-the-problem">1A. The real numbers behind the problem</h2>
+<p>These are the facts that justify the project. Every figure is explained, with its source link, in <strong>Section 3A of the full Instruction Manual</strong>. Most come from news reports of official data, so check the source before quoting one.</p>
+<table>
+<thead>
+<tr>
+<th>The number</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>54%</strong> of women are literate, against <strong>73%</strong> of men</td>
+<td>Almost 1 in 2 women cannot read and write</td>
+</tr>
+<tr>
+<td><strong>44%</strong> of rural women are literate</td>
+<td>In villages, more than half cannot</td>
+</tr>
+<tr>
+<td><strong>28%</strong> of women in the poorest rural households are literate</td>
+<td>Fewer than 3 in 10 poor village women can read</td>
+</tr>
+<tr>
+<td><strong>44.7%</strong> of Pakistanis are below the World Bank&#39;s $4.20-a-day line (about 107 million people); about <strong>22%</strong> on the national line</td>
+<td>The need is enormous</td>
+</tr>
+<tr>
+<td>About <strong>10 to 12 million families</strong> receive BISP Kafaalat; budget about <strong>Rs 716 billion</strong></td>
+<td>At this scale a small error rate means thousands of wrong decisions</td>
+</tr>
+<tr>
+<td><strong>Rs 14,500</strong> a quarter (from March 2026); cutoff <strong>32</strong></td>
+<td>Rules and amounts change, so they must be editable without code</td>
+</tr>
+<tr>
+<td><strong>68%</strong> of women own a phone (men <strong>93%</strong>); <strong>28%</strong> of women internet users use a <strong>borrowed</strong> phone</td>
+<td>Phones are shared, so we built Helper Mode</td>
+</tr>
+<tr>
+<td>About <strong>140 million</strong> people live in coverage but do not use mobile internet</td>
+<td>A good connection cannot be assumed, so the app works offline</td>
+</tr>
+<tr>
+<td>Cybercrime reports up about <strong>35%</strong> in 2025; about <strong>90%</strong> of financial scams use digital or branchless accounts</td>
+<td>Fraud is common, so we check scams and payout accounts</td>
+</tr>
+<tr>
+<td>Genuine BISP messages come <strong>only from 8171</strong>; agents reported deducting <strong>Rs 1,000 to 2,000</strong></td>
+<td>Fake messages and agent cuts are real, official problems</td>
+</tr>
+</tbody></table>
+<p><strong>Our own prototype uses made-up values</strong> (cutoff 30, Rs 13,500, sender code 9171) so nobody mistakes it for the real programme.</p>
+<h2 id="2-the-problem-we-are-solving-the-quot-why-quot">2. The problem we are solving (the &quot;why&quot;)</h2>
+<p>The hackathon brief asked for eight things. Here is each one, and what we built for it.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>The challenge</th>
+<th>What we built</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>The cost of being wrong.</strong> Paying someone who should not be paid is expensive. Refusing someone who should be paid is cruel.</td>
+<td>A cost-based &quot;approval line&quot;. The system only approves alone when it is at least 97% sure. Auto-reject is <strong>turned off</strong>: a human always decides a &quot;no&quot;. A slider screen shows the maths.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Say &quot;I am not sure&quot;.</strong></td>
+<td>Three zones: AUTO, ASK MORE, HUMAN. A &quot;I am not sure&quot; notes box tells the admin what was checked, what is missing and what to do next.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Bad data and name variants.</strong></td>
+<td>A name normaliser plus a matching score. It never says &quot;same person&quot; on the name alone.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Rules change without redeploying the app.</strong></td>
+<td>Rules live in the database as versions. The admin edits a draft, previews it with the Digital Twin, then makes it live. No code change.</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Explain and keep an audit trail.</strong></td>
+<td>Every decision has reason codes, the rule version, the model version and a full trace. A hash-chained diary records every action and cannot be edited.</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Consent and take-back.</strong></td>
+<td>The citizen gives permission and can take it back at any time. When she does, admins lose access immediately (the database enforces it).</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Works for non-readers on weak internet.</strong></td>
+<td>Big buttons, pictures, spoken Urdu and English, offline saving, resume codes.</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Scams and fake documents, with honest false-alarm numbers.</strong></td>
+<td>A scam message checker and a document checker. The evaluation page shows the real error numbers.</td>
+</tr>
+</tbody></table>
+<p><strong>Bonus items we built:</strong> Digital Twin (replay old cases under new rules), Helper Mode (one helper, many families, separate permission each), offline sync, scam reporting.</p>
+<hr>
+<h2 id="3-who-uses-it-the-three-roles">3. Who uses it: the three roles</h2>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Who they are in real life</th>
+<th>What they do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Person</strong> (eligible for relief)</td>
+<td>A woman claiming her payment (also a shopkeeper who wants to check a message)</td>
+<td>Claims her payment, checks scam messages, gives and takes back permission</td>
+</tr>
+<tr>
+<td><strong>Helper</strong></td>
+<td>A community worker who helps many women</td>
+<td>Helps one family at a time with their claim</td>
+</tr>
+<tr>
+<td><strong>Admin</strong></td>
+<td>Programme staff in an office</td>
+<td>Reviews the cases the system is unsure about, edits rules, previews changes, reads evaluation reports, manages API keys, <strong>reads and verifies the diary</strong></td>
+</tr>
+</tbody></table>
+<h3 id="3-1-the-person-39-s-journey-step-by-step">3.1 The Person&#39;s journey, step by step</h3>
+<p>The claim has <strong>8 steps</strong>. One small question at a time. A progress bar shows where she is. The phone speaks each step in Urdu or English.</p>
+<ol>
+<li><strong>Welcome.</strong> &quot;Do you want to claim your relief payment?&quot; Pick the language (Urdu or English).</li>
+<li><strong>Permission.</strong> The screen explains who can see what: the office sees her name, ID number and household; her helper sees her details only while helping; the payment service checks her account. She taps <strong>I agree</strong> (or <strong>No, not now</strong>). She is told she can take permission back any time in &quot;My data&quot;.</li>
+<li><strong>Is this you?</strong> She <strong>types her 13-digit ID number first</strong>. The system looks it up in the government record and shows what it holds (name in English and Urdu, father or husband, date of birth, district, masked ID number), then asks &quot;Is this you?&quot;. If she types <strong>someone else&#39;s</strong> number that exists, only the <strong>name</strong> is shown and her papers will be compared with that record; the claim then goes to a person. A number that is not in the records gets &quot;Sorry, this is an invalid ID number&quot;.</li>
+<li><strong>Your household.</strong> She <strong>types how many people live in her household</strong>. We never show the number; the server checks it against the survey record and says only yes or no. Three wrong tries send the claim to a person.</li>
+<li><strong>Your ID card.</strong> Only if step 4 matched, she photographs the <strong>front and back</strong> of her ID card. Nothing else is asked for (no income letter, no bill, no death certificate: many rural women have none). The system checks each photo (blur, signs of editing, duplicates), <strong>reads the card</strong> and compares its <strong>ID number, name and face</strong> with the government record. If the signal drops, the photo waits on her phone and sends later.</li>
+<li><strong>Where should the money go?</strong> She types her correct 11-digit mobile account number (it starts with 03) and checks it before pressing <strong>Continue</strong>. The system checks only the shape and whether another family uses it. <strong>No account number or holder name is ever shown back</strong>, and no account is stored in the government registry up front: it is saved there only after the claim is approved.</li>
+<li><strong>Send your claim.</strong> She sees a summary (papers sent, account, amount for this quarter) and presses <strong>Send my claim</strong>.</li>
+<li><strong>Result.</strong> She sees one of three answers:<ul>
+<li><strong>Approved</strong> (green) with the amount: &quot;your payment is approved and the amount has been sent to your account&quot; (the mock payment service pays at once).</li>
+<li><strong>Please send one more thing</strong> (it says exactly what is missing).</li>
+<li><strong>I am not sure. A person will look at your case.</strong> (blue) with the <strong>exact reason</strong>, for example &quot;The face on your card does not match the photo in our record&quot;, and what happens next and by when.</li>
+</ul>
+</li>
+</ol>
+<p>A faint reset icon in the top bar (demo only) puts the person back to her initial state: a fresh claim, and her payout side emptied (no account number, none in the payout registry, no payment given). Her old claims and decisions are kept as history.</p>
+<p>She can stop at any time. Her work is <strong>saved on the server</strong> (or on her phone if offline). A <strong>6-digit resume code</strong> lets her continue later, even on another phone.</p>
+<h3 id="3-2-the-helper-39-s-journey">3.2 The Helper&#39;s journey</h3>
+<ol>
+<li>Logs in and sees <strong>&quot;Families you help&quot;</strong>: a list of the families he helps (one in the demo: Zainab). Names are <strong>hidden</strong> (<code>Z*** B***</code>) until the woman has given permission.</li>
+<li>Opens one family. <strong>Only one family can be open at a time.</strong> This stops mix-ups.</li>
+<li>If she has not given permission yet, he <strong>asks her three things and types them on his own phone</strong>: her <strong>ID number, date of birth and household size</strong>. The server checks them against the government records (he never sees the records) and records her permission as hers. Three wrong tries lock the family for 30 minutes.</li>
+<li>The helper then fills in the claim steps <strong>with her</strong> (asking her for each detail), takes the photos, and sends. If she had already started, he carries on from where she stopped. Either she claims herself, or the helper does it for her.</li>
+<li>He ends the session. The screen locks to protect her details.</li>
+</ol>
+<p>What a helper <strong>cannot</strong> do: approve or reject any claim; see families that are not his; see a name before permission; change rules; read the audit diary.</p>
+<h3 id="3-3-the-admin-39-s-journey-part-1-reviewing-cases">3.3 The Admin&#39;s journey, part 1: reviewing cases</h3>
+<ol>
+<li>Opens <strong>Cases to review</strong>: a list sorted by <strong>priority first</strong>, then the <strong>least sure</strong> case first. It refreshes every 10 seconds.</li>
+<li>Opens a case and sees the <strong>Decision card</strong>: zone, result, confidence, a plain reason, and a <strong>Checks</strong> list (permission, ID card, household score, name match, payout account, and so on).</li>
+<li>Reads the <strong>&quot;I am not sure&quot; notes</strong>: what was checked, what is missing, suggested next steps.</li>
+<li>Sees the papers with a clear/blurry/suspicious label, and the <strong>side-by-side name comparison</strong> when the system thinks the person may be in the records twice.</li>
+<li>Chooses: <strong>Approve</strong>, <strong>Reject</strong>, <strong>Ask for more proof</strong>, or <strong>Hold</strong>, and writes a short note. Every choice makes a new row in the diary. Nothing is overwritten.</li>
+<li>If the payment is large (over Rs 20,000), a <strong>second admin</strong> must approve too.</li>
+</ol>
+<p>An admin <strong>cannot</strong> approve their own case or one they helped with, cannot change rules, and loses access to a case the moment the person takes back permission.</p>
+<h3 id="3-4-the-admin-39-s-journey-part-2-rules-and-reports">3.4 The Admin&#39;s journey, part 2: rules and reports</h3>
+<ul>
+<li><strong>Rules:</strong> sees all rule versions. Makes a <strong>new draft</strong> (rules are never edited in place). Changes the cutoff, amount, payout cap, second-approver limit and the &quot;costs of being wrong&quot;. Adds or removes rules with a simple form.</li>
+<li><strong>Policy screen:</strong> sliders for &quot;a wrong approval costs / a wrong rejection costs / a person reviewing costs&quot;. It draws a chart of where the approval line should sit. This is a <strong>preview only</strong>.</li>
+<li><strong>Digital Twin:</strong> replays up to 500 past cases under a draft version and shows <strong>who would change</strong>, which cases move zone, how many approvals change, and the before/after cost. Then the admin makes the version live (with a confirmation).</li>
+<li><strong>Evaluation:</strong> how the system did on a labelled test set, with error numbers.</li>
+<li>Manages <strong>API keys</strong> for the public API.</li>
+</ul>
+<p>Rules and decisions are kept apart in the database: nobody can approve their own case or one they helped with, and a rule change always starts as a new draft.</p>
+<h3 id="3-5-the-admin-39-s-journey-part-3-checking-the-diary">3.5 The Admin&#39;s journey, part 3: checking the diary</h3>
+<ul>
+<li>Opens <strong>The diary</strong>: every important action, in order. Filters: Decisions, Cases, Consent history, Rule changes, Documents. Search box. Sign-in lines are hidden by default.</li>
+<li>Clicks <strong>Verify the diary</strong>: the system re-checks the whole chain from the first row. It says <strong>&quot;The diary is intact&quot;</strong> or <strong>&quot;broken at row N&quot;</strong>.</li>
+<li>Opens any decision and reads its full trace: which rules ran, which fired, which model version, what confidence.</li>
+<li>Reads the evaluation numbers. Nobody can change the diary, the admin included.</li>
+</ul>
+<h3 id="3-6-the-shopkeeper-anyone-quot-is-this-message-real-quot">3.6 The shopkeeper / anyone: &quot;Is this message real?&quot;</h3>
+<p>Any citizen can paste an SMS and optionally the sender. The system says <strong>Looks real / Be careful / Looks like a scam</strong>, shows the <strong>reasons in plain words</strong> (&quot;it asks for your PIN&quot;, &quot;it has a link that does not look official&quot;), and lets the person <strong>report</strong> it. It <strong>only warns</strong>. It never blocks or deletes anything.</p>
+<hr>
+<h2 id="4-access-rights-who-can-see-and-do-what">4. Access rights: who can see and do what</h2>
+<p>These rules are <strong>enforced inside the database</strong> (called row-level security, or &quot;row locks&quot;). That means even a bug in our code cannot leak data. Each person sees only the rows they are allowed to.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Person</th>
+<th>Helper</th>
+<th>Admin</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>See <strong>own</strong> claim and data</td>
+<td>Yes</td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>See a <strong>family&#39;s</strong> data</td>
+<td>n/a</td>
+<td>Only the family in the open session, <strong>and only with her active consent</strong></td>
+<td>Only cases in <strong>own office</strong>, <strong>and only with active consent</strong>. Identity records only through a masked view</td>
+</tr>
+<tr>
+<td>Create / edit a claim draft</td>
+<td>Own</td>
+<td>For the open family</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Give consent</td>
+<td>Yes (own)</td>
+<td><strong>Only with her three details</strong></td>
+<td>No</td>
+</tr>
+<tr>
+<td>Take back consent</td>
+<td>Yes</td>
+<td>Yes (for that family)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Approve / reject / hold a case</td>
+<td>No</td>
+<td><strong>No</strong></td>
+<td><strong>Yes</strong> (not own, not one they helped with)</td>
+</tr>
+<tr>
+<td>Edit rules</td>
+<td>No</td>
+<td>No</td>
+<td><strong>Yes</strong> (as a new draft)</td>
+</tr>
+<tr>
+<td>Make a rule version live</td>
+<td>No</td>
+<td>No</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Run Digital Twin</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Read the audit diary</td>
+<td>Only lines about themselves</td>
+<td>Own</td>
+<td>Yes, all</td>
+</tr>
+<tr>
+<td>Change the diary</td>
+<td><strong>Nobody</strong></td>
+<td><strong>Nobody</strong></td>
+<td><strong>Nobody</strong></td>
+</tr>
+<tr>
+<td>Change their own role</td>
+<td>No</td>
+<td>No</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Manage API keys</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Extra safety rules (the database refuses these even if the app tries):</strong></p>
+<ul>
+<li><strong>Separation of duties:</strong> nobody approves their own case or one they helped with.</li>
+<li><strong>Two-person approval</strong> for payments over Rs 20,000.</li>
+<li><strong>Consent is checked every time.</strong> Take it back and access stops at once.</li>
+<li><strong>The diary is append-only.</strong> Update, delete and truncate are refused with an error.</li>
+<li><strong>Rule versions are immutable.</strong> Once saved they cannot change. Only one version is live at a time.</li>
+<li><strong>Mass-assignment guards:</strong> a user cannot sneak in extra fields (like changing their own role).</li>
+<li><strong>Hard flags beat any score:</strong> a deceased flag, an expired ID card, or a missing consent always blocks auto-approval, whatever the model says.</li>
+</ul>
+<hr>
+<h2 id="5-the-decision-rules-how-a-claim-is-judged">5. The decision rules: how a claim is judged</h2>
+<h3 id="5-1-the-order-of-checks">5.1 The order of checks</h3>
+<ol>
+<li><strong>Hard rules first.</strong> These beat any score. Examples: no consent, invalid or expired ID card, a &quot;deceased&quot; flag, missing core details, an exclusion rule hit, an ID number that is someone else&#39;s, or a card whose number, name or face differs from the government record, or a household size that does not match the survey.</li>
+<li><strong>Checks run:</strong> permission, ID card, name match, household score, exclusions, papers, payout account, scam signals.</li>
+<li><strong>The probability model</strong> gives a number, <code>p_eligible</code> (how likely this claim is truly eligible).</li>
+<li><strong>The zone is chosen:</strong><ul>
+<li><strong>AUTO (approve alone):</strong> only if <code>p_eligible</code> is at least the approval line (<strong>0.97</strong>), <strong>no rule fired</strong>, and <strong>no check is unsure or failing</strong>.</li>
+<li><strong>ASK MORE:</strong> one thing is missing or unclear (a blurry photo, a missing paper). The system says exactly what.</li>
+<li><strong>HUMAN:</strong> anything else. This is the default, safe answer. Below the reject line (0.15) the case still goes to a human (&quot;likely not eligible&quot;), because <strong>auto-reject is off</strong>.</li>
+</ul>
+</li>
+</ol>
+<h3 id="5-2-the-quot-cost-of-being-wrong-quot-maths">5.2 The &quot;cost of being wrong&quot; maths</h3>
+<p>The approval line is not a guess. It comes from costs:</p>
+<ul>
+<li>A <strong>wrong approval</strong> costs <strong>100</strong> (paying someone who should not be paid).</li>
+<li>A <strong>wrong rejection</strong> costs <strong>20</strong> (turning away an eligible person).</li>
+<li>A <strong>person reviewing</strong> costs <strong>3</strong> (staff time).</li>
+<li>Asking for proof costs <strong>1</strong>.</li>
+</ul>
+<p><strong>Approval line = 1 − (review cost ÷ wrong-approval cost) = 1 − 3/100 = 0.97.</strong>
+In plain words: approve alone only if you are at least 97% sure, otherwise it is cheaper to let a person look.
+<strong>Reject line = review cost ÷ wrong-rejection cost = 3/20 = 0.15.</strong></p>
+<h3 id="5-3-the-rule-set-all-editable-without-code">5.3 The rule set (all editable without code)</h3>
+<p>The current live version (&quot;v1&quot;) has:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Poverty-score cutoff</td>
+<td>30 (a score at or below this is eligible)</td>
+</tr>
+<tr>
+<td>Borderline band</td>
+<td>5 (within 5 points of the cutoff is &quot;close&quot;, so a person looks)</td>
+</tr>
+<tr>
+<td>Payment amount</td>
+<td>Rs 13,500 per quarter</td>
+</tr>
+<tr>
+<td>Payout cap</td>
+<td>Rs 29,000</td>
+</tr>
+<tr>
+<td>Second approver needed above</td>
+<td>Rs 20,000</td>
+</tr>
+<tr>
+<td>Auto-reject</td>
+<td>Off</td>
+</tr>
+<tr>
+<td>Costs of being wrong</td>
+<td>wrong approval 100, wrong rejection 20, review 3, ask for proof 1</td>
+</tr>
+</tbody></table>
+<p>A draft &quot;v2&quot; exists for the demo (cutoff 25, amount Rs 14,500). The Digital Twin shows it would move 22 cases from AUTO to HUMAN.</p>
+<h3 id="5-4-the-33-decision-reason-codes">5.4 The 33 decision reason codes</h3>
+<p>Every outcome has a code and a plain sentence in English and Urdu (for example <code>R_AUTO_APPROVED</code>, <code>R_DOC_BLURRY</code>, <code>R_CARD_FACE_MISMATCH</code>, <code>R_ID_NOT_YOURS</code>, <code>R_PMT_BORDERLINE</code>, <code>R_PAYOUT_HELPER_OWNED</code>, <code>R_DUPLICATE_IDENTITY</code>, <code>R_LOW_CONFIDENCE</code>). The citizen sees a kind sentence (&quot;The photo is not clear. Please take it again in good light.&quot;). Officers see a staff sentence (&quot;A photo is too blurry to read.&quot;).</p>
+<h3 id="5-5-payout-account-safety">5.5 Payout account safety</h3>
+<p>The system sends a claim to a human if the account is <strong>shared by other families</strong>, was <strong>changed recently</strong>, <strong>belongs to a helper</strong> (a classic abuse), or the payment is <strong>over the cap</strong> (two officers needed). Payout accounts are <strong>not pre-stored</strong> in the government registry: a typed number is only shape-checked, and it is written to the registry after approval.</p>
+<hr>
+<h2 id="6-the-technology-the-quot-what-quot-and-the-quot-why-quot">6. The technology (the &quot;what&quot; and the &quot;why&quot;)</h2>
+<h3 id="6-1-the-big-picture">6.1 The big picture</h3>
+<pre><code> Phone or computer          Python service            Database
+ (React web app)   ---&gt;     (FastAPI)       ---&gt;      (Postgres on Supabase)
+ Urdu + English             decides, explains,        row locks, diary,
+ works offline              protects, serves API      rules, consent
+</code></pre>
+<p><strong>Rule of the road:</strong> the web app talks <strong>only to our service</strong>, never straight to the database. The service talks to the database. This keeps all the important logic and all the secrets in one place.</p>
+<h3 id="6-2-front-end-what-people-see">6.2 Front end (what people see)</h3>
+<table>
+<thead>
+<tr>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>React + TypeScript</strong></td>
+<td>React builds screens from small reusable pieces. TypeScript catches many mistakes before the app runs.</td>
+</tr>
+<tr>
+<td><strong>Vite</strong></td>
+<td>A very fast tool to build and run the app.</td>
+</tr>
+<tr>
+<td><strong>Tailwind CSS</strong></td>
+<td>Quick, consistent styling. Supports right-to-left Urdu through &quot;logical&quot; spacing.</td>
+</tr>
+<tr>
+<td><strong>PWA (installable web app)</strong></td>
+<td>Works like an app on a phone, loads fast, and works <strong>offline</strong>. No app store needed.</td>
+</tr>
+<tr>
+<td><strong>Offline outbox (IndexedDB)</strong></td>
+<td>Actions are saved on the phone when there is no signal and sent later. Each has a unique &quot;idempotency key&quot; so nothing is ever sent twice.</td>
+</tr>
+<tr>
+<td><strong>Spoken prompts</strong></td>
+<td>108 pre-recorded audio files (54 Urdu, 54 English), made with the free Edge text-to-speech voices (<code>ur-PK-UzmaNeural</code> and <code>en-US-JennyNeural</code>). Because they are files, they work <strong>without internet</strong>.</td>
+</tr>
+<tr>
+<td><strong>Inter font</strong> for English, <strong>Noto Naskh Arabic</strong> for Urdu</td>
+<td>Clean, readable type. The whole app flips to right-to-left in Urdu.</td>
+</tr>
+<tr>
+<td><strong>Polling every 10 seconds</strong></td>
+<td>Simple, reliable updates. We did not need heavy live connections.</td>
+</tr>
+</tbody></table>
+<p><strong>Benefit for the problem:</strong> big buttons, pictures and speech help someone who cannot read; the offline outbox helps someone with a weak signal; resume codes let a woman stop and come back.</p>
+<h3 id="6-3-back-end-the-quot-brain-quot">6.3 Back end (the &quot;brain&quot;)</h3>
+<table>
+<thead>
+<tr>
+<th>Choice</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Python + FastAPI</strong></td>
+<td>Python is the language of machine learning, so the AI and the API live together. FastAPI is fast, checks every input automatically and creates the Swagger documentation for free.</td>
+</tr>
+<tr>
+<td><strong>psycopg 3</strong> (direct Postgres connection)</td>
+<td>Lets us set the user&#39;s identity inside each database transaction, so the row locks apply.</td>
+</tr>
+<tr>
+<td><strong>scikit-learn</strong></td>
+<td>The standard library for training small, explainable models.</td>
+</tr>
+<tr>
+<td><strong>rapidfuzz</strong></td>
+<td>Fast text-similarity maths for name matching.</td>
+</tr>
+<tr>
+<td><strong>numpy / Pillow</strong></td>
+<td>Image maths for the document checks.</td>
+</tr>
+<tr>
+<td><strong>JWT login tokens</strong></td>
+<td>A signed ticket proving who you are.</td>
+</tr>
+</tbody></table>
+<p>How a request is handled: the service reads your token, <strong>opens a database transaction as you</strong> (<code>SET LOCAL ROLE authenticated</code> and your id), so the <strong>database itself</strong> applies your row locks. The &quot;master key&quot; is used in one single file only, for system jobs such as writing the diary.</p>
+<p><strong>Safety features in the service:</strong> rate limits (login 40 per minute per computer and 8 per minute per email; uploads 20 per minute; scam check 30 per minute), input checks, a size limit on uploads, same-answer-for-wrong-email-or-password (so nobody can guess which emails exist), request ids, and no secrets in the logs.</p>
+<h3 id="6-4-database">6.4 Database</h3>
+<p><strong>Postgres, hosted by Supabase</strong> (region <strong>Mumbai</strong>, close to Pakistan for speed).</p>
+<p><strong>Why Postgres (SQL) and not Mongo or Firebase:</strong></p>
+<ul>
+<li>Our data is <strong>full of links</strong>: people, households, cases, consents, decisions. SQL handles links well.</li>
+<li><strong>Row-level security</strong> (row locks) is built in and is exactly what we need for &quot;each role sees only its rows&quot;.</li>
+<li><strong>Triggers</strong> let the database itself build the unbreakable diary.</li>
+<li><strong>Migrations</strong> (numbered SQL files) are a hackathon requirement and make the structure repeatable.</li>
+</ul>
+<p><strong>Why Supabase:</strong> a managed Postgres with a free plan, backups, and easy hosting. We use it as a <strong>Postgres host</strong>. (We tried the Seoul region first. It took 20 to 60 seconds per page from Karachi. Mumbai takes about 1.3 seconds. Region matters.)</p>
+<p><strong>The 6 migrations:</strong> <code>0001_core</code> (tables), <code>0002_rls</code> (row locks), <code>0003_audit</code> (diary), <code>0004_rules_consent</code>, <code>0005_case_safety</code>, <code>0006_function_grants</code>.</p>
+<p><strong>Main tables (27 in total, all with row locks on):</strong> <code>people</code>, <code>households</code>, <code>person_links</code>, <code>profiles</code>, <code>user_roles</code>, <code>cases</code>, <code>case_events</code>, <code>drafts</code>, <code>documents</code>, <code>doc_checks</code>, <code>consents</code>, <code>consent_events</code>, <code>helper_assignments</code>, <code>decisions</code>, <code>case_notes</code>, <code>case_flags</code>, <code>rule_sets</code>, <code>rules</code>, <code>api_keys</code>, <code>audit_log</code>, <code>scam_reports</code>, <code>eval_runs</code>, <code>eval_cases</code>, <code>labelled_cases</code>, <code>data_quality_queue</code>, <code>schema_migrations</code>.</p>
+<p><strong>The hash-chained diary (<code>audit_log</code>):</strong> each row stores a <strong>hash</strong> (a digital fingerprint) of its own content <strong>plus the previous row&#39;s hash</strong>. Change any old row and every fingerprint after it stops matching, so &quot;Verify the diary&quot; shows exactly where it broke. Update, delete and truncate are refused by triggers.
+<em>Honest limit:</em> someone with full database-owner power could rewrite the whole chain. We say so.</p>
+<p><strong>Seed data (all invented):</strong> 189 people, 151 cases, 120 labelled past cases, 393 consents, 40 scam reports, 2 API keys, and 184 demo logins.</p>
+<p><strong>Local fallback:</strong> for a laptop with no internet, a plain Postgres runs locally (PGlite), loaded with the same migrations and seed.</p>
+<h3 id="6-5-the-apis-how-programs-talk-to-the-service">6.5 The APIs (how programs talk to the service)</h3>
+<p>The service has a <strong>Swagger page</strong> at <code>/docs</code> (an automatic, clickable list of every API call).</p>
+<p><strong>Main groups (about 55 calls):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Login and me</td>
+<td><code>POST /auth/login</code>, <code>GET /me</code>, <code>PATCH /me</code></td>
+</tr>
+<tr>
+<td>Cases</td>
+<td><code>GET/POST /cases</code>, <code>PUT /cases/{id}/draft</code>, <code>POST /cases/{id}/submit</code>, <code>.../documents</code>, <code>.../decide</code>, <code>.../decisions</code>, <code>.../notes</code>, <code>.../officer-decision</code>, <code>.../assign</code>, <code>.../escalate</code>, <code>.../close</code></td>
+</tr>
+<tr>
+<td>Queue</td>
+<td><code>GET /queue</code> (admins, sorted by priority and confidence)</td>
+</tr>
+<tr>
+<td>Consent</td>
+<td><code>GET/POST /consents</code>, <code>POST /consents/{id}/withdraw</code>, <code>GET /data-access-log</code></td>
+</tr>
+<tr>
+<td>Helper</td>
+<td><code>GET /helper/families</code>, <code>POST /helper/session</code></td>
+</tr>
+<tr>
+<td>Drafts</td>
+<td><code>GET /drafts/resume/{code}</code></td>
+</tr>
+<tr>
+<td>Rules (admin)</td>
+<td><code>GET /rule-sets</code>, <code>POST /rules/validate</code>, <code>POST /rules/activate</code>, <code>POST /rules/twin</code></td>
+</tr>
+<tr>
+<td>Policy</td>
+<td><code>GET /policy/cost-curve</code>, <code>GET /policy/search</code></td>
+</tr>
+<tr>
+<td>Identity</td>
+<td><code>POST /identity/match</code>, <code>POST /cases/{id}/identity-check</code></td>
+</tr>
+<tr>
+<td>Scam</td>
+<td><code>POST /scam/check</code>, <code>POST /scam/report</code></td>
+</tr>
+<tr>
+<td>Documents</td>
+<td><code>POST /docs/analyze</code></td>
+</tr>
+<tr>
+<td>Diary</td>
+<td><code>GET /audit</code>, <code>GET /audit/mine</code>, <code>GET /audit/verify</code></td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td><code>POST /eval/run</code>, <code>GET /eval/latest</code>, <code>GET /analytics/summary</code>, <code>GET /metrics</code></td>
+</tr>
+<tr>
+<td>Mock government services</td>
+<td><code>GET /mock/nadra/{cnic}</code>, <code>GET /mock/nser/{household_id}</code>, <code>POST /mock/raast/verify</code>, <code>/release</code>, <code>/settle</code></td>
+</tr>
+<tr>
+<td><strong>Public API (needs an API key)</strong></td>
+<td><code>POST /public/v1/scam/check</code>, <code>POST /public/v1/eligibility/precheck</code>, <code>GET /public/v1/cases/{id}/status</code></td>
+</tr>
+</tbody></table>
+<p><strong>The public API</strong> is for other organisations (for example a bank or an NGO). It needs an <strong><code>X-API-Key</code></strong> header. Without a key it answers 401. Keys are stored as hashes, can be revoked (a revoked key stops working at once), and have rate limits. The demo key is <code>sahara_demo_key_0001</code> (fake).</p>
+<p><strong>The three mock services</strong> pretend to be real national systems:</p>
+<ul>
+<li><strong>NADRA</strong> (identity records), <strong>NSER</strong> (the national poverty survey and household score), <strong>Raast</strong> (instant payments). Each one checks the person&#39;s <strong>consent</strong> before it answers. They are <strong>simulated</strong>.</li>
+</ul>
+<hr>
+<h2 id="7-the-ai-what-it-is-how-it-was-trained-how-it-works">7. The AI: what it is, how it was trained, how it works</h2>
+<h3 id="7-1-first-the-basics-read-this-if-quot-ai-quot-is-new-to-you">7.1 First, the basics (read this if &quot;AI&quot; is new to you)</h3>
+<ul>
+<li><strong>Machine learning</strong> means a computer learns a pattern from examples instead of being given step-by-step rules.</li>
+<li><strong>Supervised learning:</strong> you show the computer many examples <strong>with the right answer attached</strong> (&quot;this message is a scam&quot;, &quot;this claim was truly eligible&quot;). It learns to guess the answer for new examples. <strong>Both our trained models are supervised.</strong></li>
+<li><strong>Unsupervised learning:</strong> you give the computer examples <strong>with no answers</strong> and it finds groups or patterns on its own (for example grouping similar customers). <strong>We do not use any unsupervised model</strong> in this project. We say that honestly. (Our policy search uses a word-counting method, TF-IDF, which needs no labels, but it is a search tool, not a learned model.)</li>
+<li><strong>Training</strong> = showing the examples so the model adjusts its internal numbers.</li>
+<li><strong>A feature</strong> = one fact the model looks at (for example &quot;the photo is blurry&quot;).</li>
+<li><strong>Probability</strong> = a number from 0 to 1 for how likely something is. 0.97 means 97% likely.</li>
+<li><strong>Calibration</strong> = making sure &quot;97% sure&quot; really is right about 97 times in 100. A model can sound sure and still be wrong. Calibration fixes that.</li>
+<li><strong>Synthetic data</strong> = invented examples. We use it because the rules of the hackathon forbid real personal data.</li>
+</ul>
+<h3 id="7-2-why-we-built-our-own-small-models-and-did-not-use-chatgpt-or-similar">7.2 Why we built our own small models (and did not use ChatGPT or similar)</h3>
+<ul>
+<li><strong>No real data allowed.</strong> We cannot send anything real to an outside service anyway.</li>
+<li><strong>&quot;I am not sure&quot; needs a trustworthy confidence number.</strong> A small calibrated model gives one. A chat model sounds confident even when it is wrong.</li>
+<li><strong>Explainable.</strong> A logistic regression is a weighted score. We can show <strong>which facts pushed the decision</strong>. A court, an auditor or a citizen can ask &quot;why?&quot; and get a real answer.</li>
+<li><strong>Cheap, fast and private.</strong> Each decision takes about <strong>6.6 milliseconds</strong>. It runs on a laptop with no internet and no fees.</li>
+<li><strong>Safe by design.</strong> The AI is a <strong>helper inside guard rails</strong>: hard rules run first, auto-reject is off, and a human decides every &quot;no&quot;.</li>
+</ul>
+<p><strong>We used no ready-made AI models.</strong> Nothing is downloaded from a model hub. There is an <strong>optional</strong> wrapper to call an outside language model (Ollama or Claude) to rewrite explanations, but it is <strong>switched off by default</strong> and is <strong>never</strong> used to decide.</p>
+<h3 id="7-3-the-ai-features-at-a-glance">7.3 The AI features at a glance</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Feature</th>
+<th>Type</th>
+<th>Learns from data?</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><strong>Decision and routing with confidence</strong></td>
+<td>Logistic regression, calibrated</td>
+<td><strong>Yes, supervised</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Scam message detector</strong></td>
+<td>TF-IDF text features + logistic regression + rules</td>
+<td><strong>Yes, supervised</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Name and duplicate matching</strong></td>
+<td>Spelling normaliser + weighted similarity</td>
+<td>No (maths and rules)</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Document checks</strong> (blur, editing, duplicates)</td>
+<td>Image maths</td>
+<td>No (maths)</td>
+</tr>
+<tr>
+<td>4b</td>
+<td><strong>ID card reading and face matching</strong></td>
+<td>OCR (RapidOCR) + OpenCV YuNet and SFace face models</td>
+<td>Pretrained, not trained by us</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Policy answers with sources</strong></td>
+<td>TF-IDF word search</td>
+<td>No labels needed (retrieval)</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Digital Twin and cost curve</strong></td>
+<td>Replays the engine under new rules</td>
+<td>No (simulation)</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Evaluation dashboard</strong></td>
+<td>Measures all of the above</td>
+<td>No</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Optional language model for wording</strong></td>
+<td>Outside model</td>
+<td>Off by default</td>
+</tr>
+</tbody></table>
+<h3 id="7-4-ai-1-the-decision-model-probability-of-being-eligible">7.4 AI #1: The decision model (probability of being eligible)</h3>
+<p><strong>Purpose:</strong> give a trustworthy number <code>p_eligible</code> for the zone decision.</p>
+<p><strong>What it is:</strong> a <strong>logistic regression</strong> (a simple scoring model that turns a weighted sum of facts into a probability) wrapped in <strong>isotonic calibration</strong> (a method that bends the output so the probabilities are honest).</p>
+<p><strong>What it looks at: 21 features</strong></p>
+<p><code>id_same, id_maybe, id_diff, id_score, id_known</code> (how well the name and ID match), <code>doc_conf, doc_blurry, doc_edited, doc_missing</code> (paper quality), <code>pmt_margin, pmt_missing, pmt_clear_below, pmt_clear_above</code> (how far the household score is from the cutoff), <code>flags, payout_risk, cnic_bad, deceased, scam, duplicate, missing_fields, any_visible_problem</code>.</p>
+<p><strong>What it was trained on:</strong> <strong>12,000 synthetic cases</strong> made by our own generator (<code>synth.py</code>), each with a hidden <strong>true answer</strong>. The mix we chose (not measured from the real world):</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Share</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Clearly eligible</td>
+<td>40%</td>
+</tr>
+<tr>
+<td>Clearly ineligible</td>
+<td>25%</td>
+</tr>
+<tr>
+<td>Borderline</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Bad data</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Scam</td>
+<td>5%</td>
+</tr>
+</tbody></table>
+<p>A case is &quot;truly eligible&quot; when the <strong>true</strong> survey score is at or below the cutoff, there is no true exclusion, the person is who the record says, and nothing is fraudulent. What the system <strong>sees</strong> is the true value <strong>plus noise</strong>, so cases near the cutoff are honestly uncertain, and a small share of clean-looking cases secretly hide a problem. The generator also uses two different cutoffs (25 and 30) so the model does not memorise one number.</p>
+<p><strong>Settings (parameters):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+<th>Meaning in plain words</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Algorithm</td>
+<td>Logistic regression</td>
+<td>Simple weighted scoring</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>100</td>
+<td>How closely it fits the data (higher means less holding back)</td>
+</tr>
+<tr>
+<td><code>max_iter</code></td>
+<td>2000</td>
+<td>Maximum rounds of learning</td>
+</tr>
+<tr>
+<td>Calibration</td>
+<td>Isotonic, <code>cv=5</code></td>
+<td>Learn the honesty correction on 5 splits of the data</td>
+</tr>
+<tr>
+<td>Random seed</td>
+<td>20261121</td>
+<td>Makes the training repeatable</td>
+</tr>
+<tr>
+<td>Model version</td>
+<td><code>logreg-synth-v1-…</code></td>
+<td>Saved in every decision so it is auditable</td>
+</tr>
+</tbody></table>
+<p><strong>How it works at decision time:</strong> the facts about the claim are turned into the 21 numbers; the model returns <code>p_eligible</code>; the engine compares it to the approval line (0.97) and only then allows AUTO, and only if all the hard rules and checks are clean.</p>
+<p><strong>Results on 2,000 fresh synthetic cases:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sent to AUTO</td>
+<td>758 cases (about 38%)</td>
+</tr>
+<tr>
+<td>Sent to HUMAN</td>
+<td>1,117 cases (about 56%)</td>
+</tr>
+<tr>
+<td>Sent to ASK MORE</td>
+<td>125 cases (about 6%)</td>
+</tr>
+<tr>
+<td>Wrong auto-approvals</td>
+<td>14 out of 758 (about 1.8%), all among &quot;clearly eligible&quot; cases hiding a problem</td>
+</tr>
+<tr>
+<td>Total cost (engine) vs naive &quot;always decide alone&quot;</td>
+<td><strong>4,876 vs 5,500</strong> (the engine is cheaper)</td>
+</tr>
+<tr>
+<td>Brier score (lower is better, measures honesty of the probabilities)</td>
+<td>0.0383</td>
+</tr>
+<tr>
+<td>Time per decision</td>
+<td>about 6.6 ms</td>
+</tr>
+<tr>
+<td>Clearly ineligible, scam and borderline cases wrongly approved</td>
+<td><strong>0</strong></td>
+</tr>
+</tbody></table>
+<h3 id="7-5-ai-2-the-scam-message-detector">7.5 AI #2: The scam message detector</h3>
+<p><strong>Purpose:</strong> warn a person that an SMS looks like a scam, and say <strong>why</strong>.</p>
+<p><strong>How it works (in steps):</strong></p>
+<ol>
+<li>The text is cut into <strong>character pieces of 2 to 5 letters</strong> (so it works for English, <strong>Roman Urdu</strong> and <strong>Urdu script</strong>, and survives spelling changes). This is <strong>TF-IDF</strong>, which gives more weight to unusual pieces and less to common ones.</li>
+<li>We add <strong>rule signals</strong>: asks for a PIN/OTP, asks for the ID card number, asks for a fee, uses urgent words (&quot;blocked today&quot;), prize language (&quot;you won&quot;), has a strange link, claims to be official from the wrong sender code. Negations such as &quot;never share your PIN&quot; are understood, so a <strong>real</strong> warning message is not flagged.</li>
+<li>A <strong>logistic regression</strong> turns these into probabilities for <strong>safe / suspicious / scam</strong>.</li>
+<li>Score = P(scam) + 0.5 × P(suspicious). <strong>At or above 0.62 = &quot;Looks like a scam&quot;. At or above 0.30 = &quot;Be careful&quot;.</strong> A direct ask for a PIN, OTP or ID number is <strong>never labelled safe</strong>.</li>
+<li>The official sender code is <code>9171</code> (made up). A message from it is treated more kindly.</li>
+</ol>
+<p><strong>Trained on:</strong> about <strong>480 synthetic messages</strong> that we wrote (English, Roman Urdu, Urdu script), labelled safe / suspicious / scam.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Text features</td>
+<td><code>char_wb</code> character n-grams, length 2 to 5, <code>sublinear_tf</code>, <code>min_df=2</code>, up to 30,000 features</td>
+</tr>
+<tr>
+<td>Classifier</td>
+<td>Logistic regression, <code>C=8</code>, <code>max_iter=2000</code></td>
+</tr>
+<tr>
+<td>Model version</td>
+<td><code>scam-tfidf-lr-synth-v1</code></td>
+</tr>
+</tbody></table>
+<p><strong>Results on a small labelled test set of 56 messages:</strong> 3-way accuracy <strong>92.9%</strong>; scam precision <strong>95.7%</strong> and recall <strong>95.7%</strong>; <strong>false-alarm rate on safe messages 3.7%</strong> (1 of 27 safe messages was wrongly flagged); <strong>1 scam missed</strong>; about 39 ms per message.
+<em>Honest limit:</em> it only warns, never blocks. Real SMS would be messier than our invented ones.</p>
+<h3 id="7-6-ai-3-name-and-duplicate-matching-not-trained">7.6 AI #3: Name and duplicate matching (not trained)</h3>
+<p><strong>Purpose:</strong> decide whether two records are the <strong>same person</strong>, even when names are spelled differently (Muhammad, Mohammad, Muhammed, Mohd all match).</p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>A <strong>normaliser</strong> cleans spelling (case, common variants, spaces).</li>
+<li><strong>rapidfuzz</strong> measures how similar the names are.</li>
+<li>A <strong>weighted score</strong> combines the fields: <strong>name 30%, father&#39;s name 20%, ID number 30%, date of birth 15%, district 5%</strong>. Fields that are missing are left out fairly.</li>
+<li>Result bands: <strong>SAME</strong> (score at least 0.95 and strong evidence), <strong>MAYBE</strong> (at least 0.82, or conflicting evidence), <strong>DIFFERENT</strong>.</li>
+</ol>
+<p><strong>The golden rule:</strong> it <strong>never says SAME on the name alone</strong>. MAYBE goes to a person. On our small test (10 labelled pairs) there were <strong>0 false merges</strong> (two different people called the same). The admin sees a side-by-side table to decide.</p>
+<h3 id="7-7-ai-4-document-checks-not-trained">7.7 AI #4: Document checks (not trained)</h3>
+<p><strong>Purpose:</strong> catch blurry, edited or duplicated paper photos.</p>
+<ul>
+<li><strong>Blur:</strong> a Laplacian filter measures sharpness. Variance below <strong>60</strong> (at 800 pixels wide) means <strong>blurry</strong>, so &quot;please take it again&quot;.</li>
+<li><strong>Edit signs:</strong> <strong>error-level analysis (ELA)</strong> re-saves a JPEG and looks for patches that react differently, plus a metadata check (for example editing-software tags).</li>
+<li><strong>Duplicates:</strong> a fingerprint (hash) of the image catches the same paper sent twice.</li>
+<li><strong>QR reading</strong> needs a program not installed everywhere; if it is missing the system <strong>asks for another photo instead of guessing</strong>.</li>
+<li><strong>ID card reading (OCR):</strong> the front of the card is read with RapidOCR (CPU only). Our prototype uses one fixed English card layout. The 13-digit <strong>number</strong> is compared digit by digit and the <strong>name</strong> at 88% letter similarity with the government record.</li>
+<li><strong>Face matching:</strong> the photo on the card is compared with the photo in the government record by two small OpenCV models (YuNet finds the face, SFace makes 128 numbers). &quot;Same person&quot; means cosine similarity of 0.50 or more; the model paper suggests 0.363, but that let one pair of different test people through, so we use the stricter line. <strong>This cutoff was set on a handful of AI-generated faces and has not been tested on real people or skin tones.</strong></li>
+<li>Every combination of face, name and number mismatch has its own reason code and plain sentence (Urdu and English), and says a staff member will check.</li>
+</ul>
+<p><strong>Results:</strong> 21 of 21 invented card images were judged as expected, with 0 clean images called suspicious. <em>Honest limit:</em> tiny sample, simple methods.</p>
+<h3 id="7-8-ai-5-policy-answers-with-sources">7.8 AI #5: Policy answers with sources</h3>
+<p>A person or admin can search the (made-up) programme policy. The system finds the best matching policy lines with a word-counting search (TF-IDF) and <strong>shows the lines and their source</strong>. It does <strong>not</strong> invent an answer.</p>
+<h3 id="7-9-ai-6-digital-twin-and-the-cost-curve">7.9 AI #6: Digital Twin and the cost curve</h3>
+<ul>
+<li><strong>Digital Twin:</strong> takes up to 500 past cases, runs them through a <strong>draft</strong> rule set, and shows <strong>who would change</strong> before you go live. Example: the draft v2 would move 56 cases, including 22 from AUTO to HUMAN, and change the total cost from 1,399 to 1,373.</li>
+<li><strong>Cost curve:</strong> draws the total expected cost against the approval line so the admin sees why 0.97 is sensible.</li>
+</ul>
+<h3 id="7-10-what-quot-i-am-not-sure-quot-means-in-practice">7.10 What &quot;I am not sure&quot; means in practice</h3>
+<p>The system says it when: the probability is below the approval line, a check is unsure, a hard rule fires, data is missing, the checks disagree, or the case is borderline. The admin then gets a notes box: <strong>what was checked, what is missing, what to do next.</strong></p>
+<hr>
+<h2 id="8-testing-what-was-checked-and-what-passed">8. Testing: what was checked and what passed</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Database tests (row locks, diary, rules, consent)</td>
+<td><strong>50 of 50 pass</strong></td>
+</tr>
+<tr>
+<td>Service tests (including API security tests, real-database flows and 8 ID card and face tests)</td>
+<td><strong>178 of 178 pass</strong></td>
+</tr>
+<tr>
+<td>Web tests and type check</td>
+<td><strong>27 of 27 pass</strong>, type check clean</td>
+</tr>
+<tr>
+<td>Live check in real Chrome (all three roles (person, helper, admin) against the real service and database)</td>
+<td><strong>Pass</strong>, no server or page errors</td>
+</tr>
+<tr>
+<td>Evaluation script on synthetic data</td>
+<td>numbers in section 7</td>
+</tr>
+</tbody></table>
+<p>Bugs we found by testing and fixed: the engine first sent 96% of cases to a human (the invented data mix and the calibration were wrong), revoked API keys still worked, some buttons lost their colour in the build, the helper list took 12 seconds (too many database calls), and the Urdu names did not match the English ones.</p>
+<hr>
+<h2 id="9-how-to-run-it">9. How to run it</h2>
+<p>On a Windows laptop, in PowerShell, from the project folder:</p>
+<pre><code>.\scripts\dev.ps1
+</code></pre>
+<p>This starts a local database, loads the data, starts the service at <code>http://localhost:8000</code> (Swagger at <code>/docs</code>) and the web app at <code>http://localhost:5173</code>.</p>
+<p><strong>Demo logins (all fake):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Email</th>
+<th>Password / PIN</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Person</td>
+<td><code>fam-abc0e0aa070a@citizens.sahara.test</code> (Khair Bibi, fresh claim)</td>
+<td>246810</td>
+</tr>
+<tr>
+<td>Person</td>
+<td><code>zainab@citizens.sahara.test</code></td>
+<td>246810</td>
+</tr>
+<tr>
+<td>Helper (Yousuf)</td>
+<td><code>yousuf@helpers.sahara.test</code></td>
+<td>246810</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td><code>admin1@gov.sahara.test</code></td>
+<td>Admin#2026</td>
+</tr>
+</tbody></table>
+<p><strong>Test commands:</strong> <code>node --test &quot;db/tests/*.test.mjs&quot;</code> (database), <code>python -m pytest tests -q</code> inside <code>service/</code>, <code>npm test</code> inside <code>web/</code>, <code>node web/scripts/smoke_live.mjs</code> (real Chrome).</p>
+<hr>
+<h2 id="10-what-is-real-and-what-is-simulated">10. What is real and what is simulated</h2>
+<table>
+<thead>
+<tr>
+<th>Real (built and running)</th>
+<th>Simulated (made up)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Login, roles, and database row locks</td>
+<td>NADRA identity (with photos), NSER survey and Raast payment services</td>
+</tr>
+<tr>
+<td>The hash-chained diary and its check</td>
+<td>All people, ID numbers, households and cases</td>
+</tr>
+<tr>
+<td>Consent give and take-back that really stops access</td>
+<td>The relief programme and its rules (&quot;Sahara Relief Programme&quot;)</td>
+</tr>
+<tr>
+<td>Rule versions, the Digital Twin, cost maths</td>
+<td>The scam messages and test cases used to train and test</td>
+</tr>
+<tr>
+<td>The decision engine, name matching, scam and document checks</td>
+<td>The official SMS sender code (<code>9171</code>)</td>
+</tr>
+<tr>
+<td>Offline saving, resume codes, Urdu and English voice</td>
+<td>Money: nothing is ever really paid</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="11-honest-limits-say-these-out-loud-before-anyone-asks">11. Honest limits (say these out loud before anyone asks)</h2>
+<ol>
+<li><strong>All training and test data is synthetic.</strong> The numbers show the <strong>method works</strong>, not how it would perform on real people. We wrote the data generator, so the accuracy numbers measure how well the model learned our own rules.</li>
+<li><strong>Urdu text needs a native speaker&#39;s check.</strong> The voice files were made with a computer voice.</li>
+<li><strong>QR reading</strong> is not installed everywhere. The system asks for another photo instead of guessing.
+3a. <strong>The ID card reader and face matcher</strong> work on our fixed template card and on AI-generated faces. A real NADRA card (Urdu text, glare, bent corners) needs a bigger model, and the face model needs a fairness test on a real population. Only Zainab has a registry photo.</li>
+<li><strong>The diary</strong> can in theory be rewritten by someone with full database-owner power. Normal users and even the admin cannot.</li>
+<li><strong>PIN proof for Helper Mode</strong> works in the local login mode we run. The hosted-login mode is built but not tested.</li>
+<li><strong>Docker deployment</strong> is written but untested on this laptop. <strong>The app is not deployed yet.</strong></li>
+<li><strong>No voice input.</strong> The citizen listens and taps.</li>
+<li><strong>Rate limiting</strong> is in the service&#39;s memory (fine for one server; a bigger system would use Redis).</li>
+</ol>
+<hr>
+<h2 id="12-glossary-simple-meanings">12. Glossary (simple meanings)</h2>
+<ul>
+<li><strong>API:</strong> a menu of requests one program can make to another.</li>
+<li><strong>Audit trail / diary:</strong> a record of every important action that nobody can edit.</li>
+<li><strong>Calibration:</strong> making a model&#39;s &quot;97% sure&quot; honest.</li>
+<li><strong>Consent:</strong> a person&#39;s permission, which they can take back.</li>
+<li><strong>Digital Twin:</strong> a safe copy where you replay past cases under new rules.</li>
+<li><strong>FastAPI:</strong> the Python tool we used to build the service.</li>
+<li><strong>Feature:</strong> one fact the model looks at.</li>
+<li><strong>Hash:</strong> a digital fingerprint of some data.</li>
+<li><strong>Idempotency key:</strong> a unique label that stops the same action being done twice.</li>
+<li><strong>JWT:</strong> a signed login ticket.</li>
+<li><strong>Logistic regression:</strong> a simple scoring model that outputs a probability.</li>
+<li><strong>Migration:</strong> a numbered database setup file.</li>
+<li><strong>Mock:</strong> a pretend version of a real service.</li>
+<li><strong>Offline-first:</strong> works without internet and syncs later.</li>
+<li><strong>PWA:</strong> a website that behaves like an installable app.</li>
+<li><strong>Postgres:</strong> a popular, reliable database (SQL).</li>
+<li><strong>Probability:</strong> a number from 0 to 1 for how likely something is.</li>
+<li><strong>Prototype:</strong> an early working version, not a finished product.</li>
+<li><strong>RLS (row-level security) / row locks:</strong> the database itself decides which rows each user may see.</li>
+<li><strong>Supervised learning:</strong> learning from examples that have the right answers attached.</li>
+<li><strong>Swagger / OpenAPI:</strong> an automatic, clickable page that documents the API.</li>
+<li><strong>Synthetic data:</strong> invented data used instead of real data.</li>
+<li><strong>TF-IDF:</strong> a way to turn text into numbers by weighting rare pieces more than common ones.</li>
+<li><strong>Unsupervised learning:</strong> finding patterns in data that has no answers attached (we do not use it).</li>
+<li><strong>Zone (AUTO / ASK MORE / HUMAN):</strong> the three possible outcomes of a decision.</li>
+</ul>
+<hr>
+<p><em>End of the guide. Everything in it comes from the project&#39;s code, database and test runs.</em></p>
+</body></html>

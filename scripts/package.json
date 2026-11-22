@@ -1,0 +1,11 @@
+{
+  "name": "sahara-scripts",
+  "private": true,
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Dev helpers: local Postgres without Docker",
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.17",
+    "@electric-sql/pglite-socket": "latest"
+  }
+}

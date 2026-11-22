@@ -1,0 +1,214 @@
+{
+  "_note": "Draft texts. The Urdu needs a native-speaker check before the demo. Every decision must carry one of these reason codes.",
+  "decision": {
+    "R_AUTO_APPROVED": {
+      "zone": "AUTO",
+      "en": "Your claim matches the rules. Your payment is approved and the amount has been sent to your account.",
+      "ur": "آپ کا دعویٰ قواعد پر پورا اترتا ہے۔ آپ کی ادائیگی منظور ہو گئی ہے اور رقم آپ کے اکاؤنٹ میں بھیج دی گئی ہے۔"
+    },
+    "R_CONSENT_MISSING": {
+      "zone": "HUMAN",
+      "en": "We need your permission before we can look at your details.",
+      "ur": "آپ کی تفصیلات دیکھنے سے پہلے ہمیں آپ کی اجازت چاہیے۔"
+    },
+    "R_CNIC_INVALID": {
+      "zone": "ASK_MORE",
+      "en": "The ID number looks wrong. Please check it or send a clear photo.",
+      "ur": "شناختی کارڈ نمبر درست نہیں لگتا۔ براہ کرم دوبارہ دیکھیں یا صاف تصویر بھیجیں۔"
+    },
+    "R_CNIC_EXPIRED": {
+      "zone": "HUMAN",
+      "en": "Your ID card has expired. Please renew it. A staff member will help.",
+      "ur": "آپ کا شناختی کارڈ ختم ہو چکا ہے۔ براہ کرم اسے تجدید کروائیں۔ عملے کا فرد مدد کرے گا۔"
+    },
+    "R_DECEASED": {
+      "zone": "HUMAN",
+      "en": "Our records show a problem with this person. A staff member will check.",
+      "ur": "ہمارے ریکارڈ میں اس شخص کے بارے میں مسئلہ ہے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_DUPLICATE_IDENTITY": {
+      "zone": "HUMAN",
+      "en": "This person may be in our records twice. A staff member will check before any payment.",
+      "ur": "یہ شخص ہمارے ریکارڈ میں دو بار ہو سکتا ہے۔ ادائیگی سے پہلے عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_NAME_AMBIGUOUS": {
+      "zone": "HUMAN",
+      "en": "The name matches more than one record. A staff member will check.",
+      "ur": "یہ نام ایک سے زیادہ ریکارڈ سے ملتا ہے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_PMT_ABOVE_CUTOFF": {
+      "zone": "HUMAN",
+      "en": "Your household score is above the limit for this programme. A staff member will confirm.",
+      "ur": "آپ کے گھرانے کا اسکور اس پروگرام کی حد سے زیادہ ہے۔ عملے کا فرد تصدیق کرے گا۔"
+    },
+    "R_PMT_BORDERLINE": {
+      "zone": "HUMAN",
+      "en": "Your score is close to the limit. A staff member will look at your case.",
+      "ur": "آپ کا اسکور حد کے بہت قریب ہے۔ عملے کا فرد آپ کا کیس دیکھے گا۔"
+    },
+    "R_PMT_MISSING": {
+      "zone": "HUMAN",
+      "en": "We could not find your household score. A staff member will help.",
+      "ur": "ہمیں آپ کے گھرانے کا اسکور نہیں ملا۔ عملے کا فرد مدد کرے گا۔"
+    },
+    "R_EXCLUSION_HIT": {
+      "zone": "HUMAN",
+      "en": "A rule needs a closer look at your household. A staff member will check.",
+      "ur": "ایک اصول کے تحت آپ کے گھرانے کی مزید جانچ ضروری ہے۔ عملے کا فرد دیکھے گا۔"
+    },
+    "R_DOC_MISSING": {
+      "zone": "ASK_MORE",
+      "en": "Please send the missing paper.",
+      "ur": "براہ کرم کمی والا کاغذ بھیجیں۔"
+    },
+    "R_DOC_BLURRY": {
+      "zone": "ASK_MORE",
+      "en": "The photo is not clear. Please take it again in good light.",
+      "ur": "تصویر صاف نہیں ہے۔ براہ کرم روشنی میں دوبارہ لیں۔"
+    },
+    "R_DOC_LOW_CONFIDENCE": {
+      "zone": "ASK_MORE",
+      "en": "We could not read the paper well. Please send a clearer photo.",
+      "ur": "ہم کاغذ ٹھیک سے پڑھ نہیں سکے۔ براہ کرم زیادہ صاف تصویر بھیجیں۔"
+    },
+    "R_DOC_EDITED": {
+      "zone": "HUMAN",
+      "en": "This paper needs a closer look. A staff member will check it.",
+      "ur": "اس کاغذ کی مزید جانچ ضروری ہے۔ عملے کا فرد دیکھے گا۔"
+    },
+    "R_PAYOUT_ACCOUNT_SHARED": {
+      "zone": "HUMAN",
+      "en": "The payment account is used by other families. A staff member will check.",
+      "ur": "ادائیگی کا اکاؤنٹ دوسرے گھرانے بھی استعمال کر رہے ہیں۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_PAYOUT_ACCOUNT_CHANGED": {
+      "zone": "HUMAN",
+      "en": "The payment account was changed recently. A staff member will check.",
+      "ur": "ادائیگی کا اکاؤنٹ حال ہی میں تبدیل ہوا ہے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_PAYOUT_HELPER_OWNED": {
+      "zone": "HUMAN",
+      "en": "The payment account belongs to a helper, not to you. A staff member will check.",
+      "ur": "ادائیگی کا اکاؤنٹ مددگار کا ہے، آپ کا نہیں۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_PAYOUT_OVER_CAP": {
+      "zone": "HUMAN",
+      "en": "This payment is larger than the usual limit. Two staff members must approve it.",
+      "ur": "یہ ادائیگی معمول کی حد سے زیادہ ہے۔ دو افسران کی منظوری ضروری ہے۔"
+    },
+    "R_CHECKS_DISAGREE": {
+      "zone": "HUMAN",
+      "en": "Our checks did not agree. A staff member will look at your case.",
+      "ur": "ہماری جانچ ایک دوسرے سے نہیں ملی۔ عملے کا فرد آپ کا کیس دیکھے گا۔"
+    },
+    "R_MISSING_FIELDS": {
+      "zone": "HUMAN",
+      "en": "Some details are missing. A staff member will help you.",
+      "ur": "کچھ تفصیلات موجود نہیں ہیں۔ عملے کا فرد آپ کی مدد کرے گا۔"
+    },
+    "R_SCAM_FLAG": {
+      "zone": "HUMAN",
+      "en": "Something in this claim looks like a scam. A staff member will check. Do not share your PIN.",
+      "ur": "اس دعوے میں کوئی چیز فراڈ جیسی لگتی ہے۔ عملے کا فرد جانچ کرے گا۔ اپنا پن کسی کو نہ بتائیں۔"
+    },
+    "R_LOW_CONFIDENCE": {
+      "zone": "HUMAN",
+      "en": "I am not sure. A person will look at your case.",
+      "ur": "مجھے یقین نہیں ہے۔ ایک انسان آپ کا کیس دیکھے گا۔"
+    },
+    "R_LIKELY_NOT_ELIGIBLE": {
+      "zone": "HUMAN",
+      "en": "Based on the rules, you may not qualify. A staff member will confirm and explain.",
+      "ur": "قواعد کے مطابق شاید آپ اہل نہ ہوں۔ عملے کا فرد تصدیق کر کے وضاحت کرے گا۔"
+    },
+    "R_CARD_NUMBER_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The ID number on your card does not match our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر شناختی نمبر ہمارے ریکارڈ سے نہیں ملتا۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_CARD_NAME_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The name on your card does not match our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر نام ہمارے ریکارڈ سے نہیں ملتا۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_CARD_BOTH_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The name and the ID number on your card do not match our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر نام اور شناختی نمبر دونوں ہمارے ریکارڈ سے نہیں ملتے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_CARD_UNREADABLE": {
+      "zone": "ASK_MORE",
+      "en": "We could not read your ID card. Please take a clear photo of the front, flat, in good light.",
+      "ur": "ہم آپ کا شناختی کارڈ پڑھ نہیں سکے۔ براہ کرم کارڈ کے سامنے کی صاف تصویر روشنی میں سیدھی لیں۔"
+    },
+    "R_CARD_FACE_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The face on your card does not match the photo in our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر چہرہ ہمارے ریکارڈ کی تصویر سے نہیں ملتا۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_CARD_FACE_NAME_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The face and the name on your card do not match our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر چہرہ اور نام ہمارے ریکارڈ سے نہیں ملتے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_CARD_FACE_NUMBER_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The face and the ID number on your card do not match our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر چہرہ اور شناختی نمبر ہمارے ریکارڈ سے نہیں ملتے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_CARD_ALL_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The face, the name and the ID number on your card do not match our record. A staff member will check.",
+      "ur": "آپ کے کارڈ پر چہرہ، نام اور شناختی نمبر ہمارے ریکارڈ سے نہیں ملتے۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_ID_NOT_YOURS": {
+      "zone": "HUMAN",
+      "en": "The ID number you typed belongs to someone else, not to the account you signed in with. A staff member will check.",
+      "ur": "آپ کا لکھا ہوا شناختی نمبر کسی اور کا ہے، آپ کے لاگ ان اکاؤنٹ کا نہیں۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_HOUSEHOLD_MISMATCH": {
+      "zone": "HUMAN",
+      "en": "The number of people in your household does not match our record. A staff member will check.",
+      "ur": "آپ کے گھرانے کے افراد کی تعداد ہمارے ریکارڈ سے نہیں ملتی۔ عملے کا فرد جانچ کرے گا۔"
+    },
+    "R_HOUSEHOLD_NOT_CHECKED": {
+      "zone": "HUMAN",
+      "en": "We could not check the number of people in your household. A staff member will check.",
+      "ur": "ہم آپ کے گھرانے کے افراد کی تعداد کی جانچ نہیں کر سکے۔ عملے کا فرد جانچ کرے گا۔"
+    }
+  },
+  "scam": {
+    "ASKS_FEE": {
+      "en": "It asks you to pay a fee. Registration and payments are free.",
+      "ur": "یہ آپ سے فیس مانگتا ہے۔ رجسٹریشن اور ادائیگی مفت ہیں۔"
+    },
+    "SENDER_NOT_OFFICIAL": {
+      "en": "It did not come from the official sender code (9171 in this prototype).",
+      "ur": "یہ سرکاری کوڈ (اس پروٹو ٹائپ میں 9171) سے نہیں آیا۔"
+    },
+    "ASKS_PIN_OR_OTP": {
+      "en": "It asks for your PIN, OTP or password. Nobody official will ask for this.",
+      "ur": "یہ آپ کا پن، او ٹی پی یا پاس ورڈ مانگتا ہے۔ کوئی سرکاری شخص یہ نہیں مانگتا۔"
+    },
+    "ASKS_CNIC": {
+      "en": "It asks you to send your ID number in a message.",
+      "ur": "یہ آپ سے پیغام میں شناختی کارڈ نمبر مانگتا ہے۔"
+    },
+    "URGENT_LANGUAGE": {
+      "en": "It rushes you to act right now.",
+      "ur": "یہ آپ کو فوراً عمل کرنے پر مجبور کرتا ہے۔"
+    },
+    "SUSPICIOUS_LINK": {
+      "en": "It has a link that does not look official.",
+      "ur": "اس میں ایسا لنک ہے جو سرکاری نہیں لگتا۔"
+    },
+    "PRIZE_TOO_GOOD": {
+      "en": "It promises a prize or money you did not apply for.",
+      "ur": "یہ ایسے انعام یا رقم کا وعدہ کرتا ہے جس کے لیے آپ نے درخواست نہیں دی۔"
+    },
+    "OFFICIAL_SENDER": {
+      "en": "It came from the official sender code and has nothing suspicious.",
+      "ur": "یہ سرکاری کوڈ سے آیا ہے اور اس میں کوئی مشکوک بات نہیں۔"
+    }
+  }
+}

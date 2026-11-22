@@ -1,0 +1,11 @@
+{
+  "name": "sahara-db",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Database layer: migrations, seed, tests (PGlite in memory)",
+  "scripts": {
+    "seed:build": "node seed/build_seed.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  }
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "key": "zainab",
+    "user_id": "a0000000-0000-4000-8000-000000000001",
+    "email": "zainab@citizens.sahara.test",
+    "secret": "246810",
+    "role": "citizen",
+    "office": "KHI-EAST"
+  },
+  {
+    "key": "yousuf",
+    "user_id": "a0000000-0000-4000-8000-000000000002",
+    "email": "yousuf@helpers.sahara.test",
+    "secret": "246810",
+    "role": "helper",
+    "office": "KHI-EAST"
+  },
+  {
+    "key": "asim",
+    "user_id": "a0000000-0000-4000-8000-000000000003",
+    "email": "asim@citizens.sahara.test",
+    "secret": "246810",
+    "role": "citizen",
+    "office": "KHI-EAST"
+  },
+  {
+    "key": "officer1",
+    "user_id": "a0000000-0000-4000-8000-000000000004",
+    "email": "admin1@gov.sahara.test",
+    "secret": "Admin#2026",
+    "role": "admin",
+    "office": "KHI-EAST"
+  },
+  {
+    "key": "officer2",
+    "user_id": "a0000000-0000-4000-8000-000000000005",
+    "email": "admin2@gov.sahara.test",
+    "secret": "Admin#2026",
+    "role": "admin",
+    "office": "KHI-EAST"
+  },
+  {
+    "key": "admin",
+    "user_id": "a0000000-0000-4000-8000-000000000006",
+    "email": "admin@gov.sahara.test",
+    "secret": "Admin#2026",
+    "role": "admin",
+    "office": "KHI-EAST"
+  }
+]

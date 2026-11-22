@@ -1,0 +1,11 @@
+import { chromium } from 'playwright-core'
+const b = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: true })
+const p = await b.newPage({ viewport: { width: 794, height: 1123 } })
+await p.goto('file:///C:/Users/Talha/Desktop/Hackathon/Coders%20Cup%2026/sahara-relief/docs/gen/manual.html')
+await p.waitForTimeout(800)
+await p.locator('.cover').screenshot({ path: '.shots/m-cover.png' })
+await p.locator('svg').first().screenshot({ path: '.shots/m-er.png' })
+const t = p.locator('h3', { hasText: 'A.3.8' }).first()
+await t.scrollIntoViewIfNeeded(); await p.screenshot({ path: '.shots/m-table.png' })
+console.log('toc entries:', await p.locator('.toc a').count(), '| tables:', await p.locator('table').count(), '| h1:', await p.locator('h1').count())
+await b.close()

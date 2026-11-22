@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sahara Relief: The Complete Guide</title>
+<style>
+  :root{
+    --ink:#2B2420; --muted:#6F625A; --line:#E7DED5; --cream:#FAF6F1; --paper:#FFFFFF;
+    --brand:#D9602E; --brand-soft:#FBE8DD; --green:#2E7D5B; --green-soft:#E2F1EA;
+    --amber:#B7791F; --amber-soft:#FBEFD5; --red:#B3392F; --red-soft:#F8E1DE; --blue:#33597F; --blue-soft:#E3ECF5;
+  }
+  *{box-sizing:border-box}
+  @page{ size:A4; margin:16mm 15mm 18mm 15mm }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+  body{ margin:0; font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif; color:var(--ink); font-size:10.4pt; line-height:1.5 }
+  h1,h2,h3,h4{ line-height:1.2; margin:0; break-after:avoid }
+  table{ break-inside:avoid }
+  p{ margin:0 0 8px }
+  b,strong{ font-weight:650 }
+  .pb{ break-before:page }
+  .avoid{ break-inside:avoid }
+
+  /* ---------- section opener ---------- */
+  .opener{ display:flex; align-items:flex-end; gap:14px; border-bottom:3px solid var(--brand); padding-bottom:10px; margin:0 0 14px }
+  .opener .no{ font-size:44pt; font-weight:800; color:var(--brand); line-height:.9 }
+  .opener h1{ font-size:21pt; letter-spacing:-.3px }
+  .opener .sub{ color:var(--muted); font-size:10pt; margin-top:3px }
+  h2{ font-size:14pt; margin:18px 0 8px; color:var(--ink) }
+  h2::before{ content:""; display:inline-block; width:9px; height:9px; background:var(--brand); border-radius:2px; margin-right:8px; vertical-align:1px }
+  h3{ font-size:11.2pt; margin:12px 0 5px }
+  .lead{ font-size:11.4pt; color:#3b322c }
+  .small{ font-size:8.6pt; color:var(--muted) }
+
+  /* ---------- cards / callouts ---------- */
+  .callout{ border-left:5px solid var(--brand); background:var(--brand-soft); padding:10px 14px; border-radius:6px; margin:10px 0 }
+  .callout.green{ border-color:var(--green); background:var(--green-soft) }
+  .callout.amber{ border-color:var(--amber); background:var(--amber-soft) }
+  .callout.blue{ border-color:var(--blue); background:var(--blue-soft) }
+  .callout b:first-child{ display:block; margin-bottom:2px }
+  .grid{ display:grid; gap:10px }
+  .g2{ grid-template-columns:1fr 1fr } .g3{ grid-template-columns:1fr 1fr 1fr } .g4{ grid-template-columns:repeat(4,1fr) }
+  .card{ border:1px solid var(--line); border-radius:10px; padding:11px 13px; background:var(--paper) }
+
+  /* ---------- stat cards ---------- */
+  .stat{ border:1px solid var(--line); border-radius:12px; padding:12px 12px 10px; background:var(--cream) }
+  .stat .big{ font-size:23pt; font-weight:800; color:var(--brand); line-height:1 }
+  .stat .big small{ font-size:11pt; font-weight:700 }
+  .stat .what{ font-weight:650; margin:5px 0 3px; font-size:9.6pt; line-height:1.3 }
+  .stat .why{ color:var(--muted); font-size:8.7pt; line-height:1.35 }
+  .stat .src{ color:#9a8d83; font-size:7.6pt; margin-top:4px }
+
+  /* ---------- tables ---------- */
+  table{ width:100%; border-collapse:collapse; margin:6px 0 10px; font-size:9.3pt }
+  th{ background:var(--ink); color:#fff; text-align:left; padding:6px 9px; font-weight:600; font-size:8.8pt }
+  td{ padding:6px 9px; border-bottom:1px solid var(--line); vertical-align:top }
+  tr:nth-child(even) td{ background:#FCFAF7 }
+  td.k{ font-weight:650; white-space:nowrap }
+
+  /* ---------- chips ---------- */
+  .chip{ display:inline-block; font-size:7.8pt; font-weight:700; padding:1px 8px; border-radius:999px; letter-spacing:.2px; white-space:nowrap }
+  .c-green{ background:var(--green-soft); color:var(--green) } .c-amber{ background:var(--amber-soft); color:var(--amber) }
+  .c-red{ background:var(--red-soft); color:var(--red) } .c-blue{ background:var(--blue-soft); color:var(--blue) } .c-brand{ background:var(--brand-soft); color:var(--brand) }
+
+  /* ---------- architecture ---------- */
+  .arch{ display:grid; grid-template-columns:1fr 34px 1fr 34px 1fr; align-items:stretch; margin:10px 0 }
+  .arch .box{ border:2px solid var(--ink); border-radius:12px; padding:10px 12px; background:var(--paper) }
+  .arch .box h4{ font-size:10.6pt; margin-bottom:3px }
+  .arch .box p{ font-size:8.8pt; color:var(--muted); margin:0 }
+  .arch .arrow{ display:flex; align-items:center; justify-content:center; font-size:20pt; color:var(--brand); font-weight:700 }
+  .arch .b1{ border-color:var(--brand) } .arch .b2{ border-color:var(--blue) } .arch .b3{ border-color:var(--green) }
+  .mock{ margin-top:6px; text-align:center; font-size:8.8pt; color:var(--muted); border:1.5px dashed var(--line); border-radius:10px; padding:6px }
+
+  /* ---------- role cards ---------- */
+  .role{ border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:0 0 12px; break-inside:avoid }
+  .role header{ display:flex; align-items:center; gap:12px; padding:10px 14px; color:#fff }
+  .role header .ic{ width:38px; height:38px; border-radius:50%; background:rgba(255,255,255,.22); display:grid; place-items:center; font-size:17pt }
+  .role header h3{ margin:0; font-size:13pt } .role header small{ opacity:.9; font-size:9pt }
+  .role.cit header{ background:var(--brand) } .role.hlp header{ background:var(--blue) } .role.adm header{ background:var(--ink) }
+  .role .body{ display:grid; grid-template-columns:1.25fr 1fr; gap:14px; padding:10px 14px 12px }
+  .role ul{ margin:3px 0 0; padding-left:17px } .role li{ margin:2px 0 }
+  .role h4{ font-size:9.2pt; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin:0 0 3px }
+  .steps{ display:flex; flex-wrap:wrap; gap:5px; margin:3px 0 6px }
+  .steps span{ background:var(--cream); border:1px solid var(--line); border-radius:999px; padding:1px 9px; font-size:8.6pt }
+  .steps span b{ color:var(--brand) }
+
+  /* ---------- AI cards ---------- */
+  .ai{ border:1px solid var(--line); border-radius:12px; padding:0; margin:0 0 10px; break-inside:avoid; overflow:hidden }
+  .ai .top{ display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--cream); padding:7px 13px; border-bottom:1px solid var(--line) }
+  .ai .top h3{ margin:0; font-size:11.2pt } .ai .top .tags{ display:flex; gap:5px; flex-wrap:wrap }
+  .ai .cols{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; padding:9px 13px 4px }
+  .ai h4{ font-size:8.4pt; text-transform:uppercase; letter-spacing:.7px; color:var(--brand); margin:0 0 2px }
+  .ai .cols p{ font-size:9.3pt; margin:0 0 6px }
+  .ai .res{ background:#FCFAF7; border-top:1px solid var(--line); padding:6px 13px; font-size:9pt; color:#3b322c }
+  .res b{ color:var(--ink) }
+
+  /* ---------- limits ---------- */
+  .lim{ border:1px solid var(--line); border-radius:12px; padding:10px 13px; margin:0 0 9px; break-inside:avoid }
+  .lim .t{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:3px }
+  .lim .t h3{ margin:0; font-size:11pt }
+  .lim p{ margin:0 0 4px; font-size:9.5pt } .lim .fix{ color:var(--green); font-size:9.2pt }
+  .lim .fix b{ color:var(--green) }
+
+  /* ---------- roadmap ---------- */
+  .road{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:8px 0 }
+  .road .ph{ border:1px solid var(--line); border-top:5px solid var(--brand); border-radius:10px; padding:10px 12px; background:var(--paper) }
+  .road .ph:nth-child(2){ border-top-color:var(--blue) } .road .ph:nth-child(3){ border-top-color:var(--green) }
+  .road h4{ font-size:10.2pt; margin-bottom:2px } .road .scale{ font-size:8.6pt; color:var(--muted); margin-bottom:5px }
+  .road ul{ margin:0; padding-left:16px; font-size:9pt } .road li{ margin:2px 0 }
+  .quote{ font-size:10.5pt; font-style:italic; color:#4a3f38; border-left:3px solid var(--line); padding-left:12px; margin:8px 0 }
+
+  /* ---------- cover ---------- */
+  .cover{ height:297mm; width:210mm; margin:-16mm -15mm 0; background:linear-gradient(160deg,#2B2420 0%,#2B2420 58%,#D9602E 58.2%,#D9602E 100%); color:#fff; position:relative; overflow:hidden; padding:0 }
+  .cover .circle{ position:absolute; border-radius:50%; background:rgba(255,255,255,.06) }
+  .cover .in{ position:absolute; left:22mm; right:22mm; top:50mm }
+  .cover .tag{ display:inline-block; background:rgba(255,255,255,.14); border-radius:999px; padding:4px 14px; font-size:9.5pt; letter-spacing:.5px }
+  .cover h1{ font-size:46pt; line-height:1.02; margin:18px 0 10px; letter-spacing:-1px }
+  .cover h1 span{ color:#F3A27B }
+  .cover .tagline{ font-size:14pt; max-width:140mm; color:#EDE3DB; line-height:1.4 }
+  .cover .bottom{ position:absolute; left:22mm; right:22mm; bottom:20mm }
+  .cover .pills{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px }
+  .cover .pills span{ background:rgba(255,255,255,.2); padding:5px 13px; border-radius:999px; font-size:10pt; font-weight:600 }
+  .cover .note{ font-size:9pt; opacity:.92; max-width:150mm }
+
+  /* ---------- contents ---------- */
+  .toc{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 }
+  .toc div{ border:1px solid var(--line); border-radius:10px; padding:9px 12px; background:var(--cream) }
+  .toc b{ color:var(--brand); font-size:15pt; margin-right:6px }
+  .toc span{ display:block; color:var(--muted); font-size:8.8pt; margin-top:2px }
+</style>
+</head>
+<body>
+
+<!-- =================================================== COVER -->
+<div class="cover">
+  <div class="circle" style="width:150mm;height:150mm;right:-55mm;top:-40mm"></div>
+  <div class="circle" style="width:90mm;height:90mm;left:-30mm;bottom:50mm;background:rgba(255,255,255,.08)"></div>
+  <div class="in">
+    <span class="tag">CODER'S CUP '26 &nbsp;·&nbsp; THE LAST MILE: AI ON PUBLIC RAILS</span>
+    <h1>Sahara<br><span>Relief</span></h1>
+    <p class="tagline">A public-service platform that helps a woman who cannot read, and the helper beside her, claim a quarterly relief payment from start to finish, safely and in her own language.</p>
+  </div>
+  <div class="bottom">
+    <div class="pills"><span>Citizen</span><span>Helper</span><span>Admin</span><span>Urdu + English</span><span>Works offline</span></div>
+    <p class="note"><b>The Complete Guide.</b> Prototype for a hackathon, not an official service. All people, ID numbers, households, payments and government records in it are invented. The AI was trained and tested on synthetic data.</p>
+  </div>
+</div>
+
+<!-- =================================================== CONTENTS + PAGE 1 -->
+<div class="pb"></div>
+<div class="opener"><div class="no">0</div><div><h1>What this guide covers</h1><div class="sub">Six parts, in the order a judge or a new teammate needs them</div></div></div>
+<p class="lead">Sahara Relief lets a woman claim a (mock) quarterly cash payment on her own phone, or with a community helper, and lets staff review only the cases the computer is not sure about. Everything the AI decides is explained, recorded and open to a human.</p>
+<div class="toc">
+  <div><b>1</b>Why we built it<span>The problem, with facts and figures</span></div>
+  <div><b>2</b>The technology and why we chose it<span>Every tool, and the reason for each</span></div>
+  <div><b>3</b>The three roles<span>Citizen, helper and admin</span></div>
+  <div><b>4</b>The AI features<span>What each does, why, how it works, how well it did</span></div>
+  <div><b>5</b>Limitations<span>Including the helper-commission problem</span></div>
+  <div><b>6</b>How it scales<span>From a demo to a national programme</span></div>
+</div>
+<div class="callout green avoid"><b>Our build in numbers</b>
+  <div class="grid g4" style="margin-top:6px">
+    <div><b style="font-size:16pt;color:var(--green)">3</b><br><span class="small">roles with separate screens</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">10</b><br><span class="small">AI features (2 trained by us)</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">154</b><br><span class="small">recorded voice prompts (Urdu + English)</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">65</b><br><span class="small">API routes, with Swagger documentation</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">179</b><br><span class="small">service tests, all pass</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">50</b><br><span class="small">database tests, all pass</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">27</b><br><span class="small">web tests, all pass</span></div>
+    <div><b style="font-size:16pt;color:var(--green)">23</b><br><span class="small">real-browser click-through checks</span></div>
+  </div>
+</div>
+
+<!-- =================================================== 1 WHY -->
+<div class="opener" style="margin-top:20px"><div class="no">1</div><div><h1>Why we built it</h1><div class="sub">The problem, in numbers</div></div></div>
+<p class="lead">Pakistan's largest cash-transfer programme (BISP Kafaalat) pays millions of families every quarter. The women it is meant for are often the least able to use a form, a smartphone or a bank. We built the last mile: the step where a real woman has to claim the money.</p>
+
+<h2>The people: who the programme is meant to reach</h2>
+<div class="grid g3">
+  <div class="stat"><div class="big">44<small>%</small></div><div class="what">of rural women can read and write (rural men: 67%)</div><div class="why">In villages, more than half of women cannot read a form.</div><div class="src">Economic Survey 2025-26</div></div>
+  <div class="stat"><div class="big">28<small>%</small></div><div class="what">of women in the poorest fifth of rural homes are literate</div><div class="why">Fewer than 3 in 10 poor village women can read. Our flow must work with pictures and voice.</div><div class="src">Gallup Pakistan, HIES 2024-25</div></div>
+  <div class="stat"><div class="big">68<small>%</small></div><div class="what">of women own a mobile phone (men: 93%). 28% of women online use a borrowed phone</div><div class="why">A woman may not have her own phone, so a helper must be able to assist.</div><div class="src">GSMA Mobile Gender Gap</div></div>
+</div>
+
+<h2>The programme: why errors are expensive</h2>
+<div class="grid g3">
+  <div class="stat"><div class="big">10-12<small>M</small></div><div class="what">households receive the BISP cash transfer; budget about Rs 716 billion (2025-26)</div><div class="why">Even a tiny error rate means many wrong payments.</div><div class="src">Geo, Business Recorder</div></div>
+  <div class="stat"><div class="big">Rs 14,500</div><div class="what">per quarter (raised from Rs 13,500 in March 2026); poverty-score cutoff 32</div><div class="why">Rules and amounts change, so they must be editable without new code.</div><div class="src">Dawn, ARY, ProPakistani</div></div>
+  <div class="stat"><div class="big">Rs 1-2<small>k</small></div><div class="what">is deducted by some agents from the payment before the woman receives it</div><div class="why">The real "last mile" loss. This is what the helper and account rules are about.</div><div class="src">Dawn, Profit, Tribune</div></div>
+</div>
+
+<h2>The risk: fraud and weak connection</h2>
+<div class="grid g3">
+  <div class="stat"><div class="big">~35<small>%</small></div><div class="what">rise in cybercrime reports in 2025; about 90% of financial scams run through digital or branchless-banking accounts</div><div class="why">Payout-account checks and a scam checker are not optional.</div><div class="src">Business Recorder, Profit</div></div>
+  <div class="stat"><div class="big">8171</div><div class="what">is the only sender of genuine BISP messages. Tens of thousands of SIM cards sending fake ones were blocked</div><div class="why">Fake "relief" messages are a known, official problem.</div><div class="src">PID, Daily Times, Geo</div></div>
+  <div class="stat"><div class="big">140<small>M</small></div><div class="what">people live under mobile-broadband coverage but do not use mobile internet</div><div class="why">Having signal is not the same as using it. The app must work when the signal drops.</div><div class="src">GSMA, PTA</div></div>
+</div>
+<p class="small">Figures are official survey results as reported by news outlets and international bodies. Some are from different years or use different definitions (for example poverty at $4.20 a day or at the national line). Open the source before quoting a number on stage. The full source list with links is in Part 1 of the Instruction Manual. Everything inside our prototype (cutoff 30, Rs 13,500, sender 9171, 189 people) is invented.</p>
+
+<h2>From problem to feature</h2>
+<table>
+  <tr><th style="width:44%">The problem</th><th>What we built for it</th></tr>
+  <tr><td>Most poor village women cannot read</td><td>A spoken, picture-based flow in Urdu and English, with a practice demo before each page</td></tr>
+  <tr><td>Borrowed phones, weak signal</td><td>Helper mode, resume codes, saved steps and an offline queue</td></tr>
+  <tr><td>Millions of families, so errors multiply</td><td>The cost of being wrong turned into a rule: the machine decides alone only when over 97% sure</td></tr>
+  <tr><td>Targeting errors both ways; women less likely to hold an ID card</td><td>An "I am not sure" path: doubtful cases go to a person with notes. The machine never rejects alone</td></tr>
+  <tr><td>Rules and amounts keep changing</td><td>Versioned rules edited by an admin without code, previewed on past cases (Digital Twin)</td></tr>
+  <tr><td>Agents take a cut; fraud is common</td><td>Money goes to her own account; helper-owned or shared accounts are held; scam checker; an unchangeable record of every action</td></tr>
+</table>
+
+<!-- =================================================== 2 TECH -->
+<div class="pb"></div>
+<div class="opener"><div class="no">2</div><div><h1>The technology, and why</h1><div class="sub">Every choice was made for one of four reasons: it works offline, it is explainable, it is private, it is free to run</div></div></div>
+
+<div class="arch avoid">
+  <div class="box b1"><h4>Web app</h4><p>React + TypeScript installable app, Urdu and English, works offline, recorded voice</p></div>
+  <div class="arrow">→</div>
+  <div class="box b2"><h4>Python service</h4><p>FastAPI. Rules, AI checks, decisions, explanations, the API</p></div>
+  <div class="arrow">→</div>
+  <div class="box b3"><h4>Database</h4><p>Postgres on Supabase. Row locks, unchangeable diary, rules, consent</p></div>
+</div>
+<div class="mock avoid">The service also talks to three <b>mock government services</b>: identity (like NADRA), household survey (like NSER) and payments (like Raast).</div>
+
+<div class="callout avoid"><b>The one rule of the design</b>The web app talks only to our service, never straight to the database. The service then talks to the database <b>as the signed-in person</b>, so the database itself refuses to show anyone else's rows. A bug in our code cannot leak someone's data.</div>
+
+<h2>The front end: what people see</h2>
+<table>
+  <tr><th style="width:26%">Tool</th><th>Why we chose it</th></tr>
+  <tr><td class="k">React 18 + TypeScript</td><td>Large community and reusable screens. TypeScript catches many mistakes before the app runs.</td></tr>
+  <tr><td class="k">Vite + Tailwind CSS</td><td>Fast builds and small files. Tailwind gives a consistent design and supports right-to-left Urdu.</td></tr>
+  <tr><td class="k">Installable web app (PWA) + service worker</td><td>Opens from the browser like an app, with no app store, and keeps working with no signal. A keypad-to-smartphone upgrade is cheaper than a new app.</td></tr>
+  <tr><td class="k">IndexedDB (idb)</td><td>Stores the offline outbox and a copy of her claim on the phone, so a dead battery loses nothing.</td></tr>
+  <tr><td class="k">Recorded voice (edge-tts)</td><td>154 Urdu and English prompts recorded once and stored in the app, so they play with <b>no internet</b>. Live text-to-speech would need signal.</td></tr>
+</table>
+
+<h2>The back end: the brain</h2>
+<table>
+  <tr><th style="width:26%">Tool</th><th>Why we chose it</th></tr>
+  <tr><td class="k">Python + FastAPI + Uvicorn</td><td>Python is the language of machine learning, so the AI and the API live together. FastAPI checks every input and writes the Swagger documentation for free.</td></tr>
+  <tr><td class="k">psycopg 3</td><td>A direct database connection, so each request can run <b>as the signed-in person</b> and the database applies that person's row locks.</td></tr>
+  <tr><td class="k">scikit-learn, numpy</td><td>Small, explainable models that train in seconds on a laptop CPU.</td></tr>
+  <tr><td class="k">RapidOCR + onnxruntime</td><td>Reads the ID card on the CPU with no internet and no graphics card.</td></tr>
+  <tr><td class="k">OpenCV (YuNet, SFace)</td><td>Finds and compares the face on the card with the face in the government record.</td></tr>
+  <tr><td class="k">rapidfuzz</td><td>Fast name comparison for spelling variants (Muhammad, Mohammad, Muhammed).</td></tr>
+</table>
+
+<h2>The database</h2>
+<table>
+  <tr><th style="width:26%">Choice</th><th>Why</th></tr>
+  <tr><td class="k">Postgres (SQL)</td><td>Money and identity need exact rules between tables. SQL gives strict constraints and <b>row-level security</b>. A document store such as MongoDB or Firebase cannot enforce "this person sees only her own rows" as strongly.</td></tr>
+  <tr><td class="k">Supabase (hosted Postgres)</td><td>Managed Postgres with login and storage, close to Pakistan (Mumbai). A local database is the fallback for the demo.</td></tr>
+  <tr><td class="k">Row locks (row-level security)</td><td>The database, not the screen, decides who may see which row. A citizen sees her claim; a helper sees only the family he has open; an admin sees only cases of his office with active consent.</td></tr>
+  <tr><td class="k">Hash-chained diary</td><td>Every important action is written once and linked to the one before. Nobody can edit or delete it, and a "Verify the diary" button recomputes the chain.</td></tr>
+  <tr><td class="k">6 migrations, seed data</td><td>The database can be rebuilt from scratch, in order, for any teammate or judge.</td></tr>
+</table>
+
+<h2>Other decisions, and the reason for each</h2>
+<div class="grid g2">
+  <div class="card"><b>Our own small models, not a chat AI</b><p class="small" style="margin-top:3px">No real data may leave the system. A small calibrated model gives a trustworthy confidence ("I am not sure" needs one), explains itself, and costs nothing to run. A chat model sounds sure even when wrong.</p></div>
+  <div class="card"><b>Hard rules before any AI score</b><p class="small" style="margin-top:3px">No consent, an expired ID or an edited paper always blocks automatic approval. Rules are data in a safe language, not code, so an admin can change them with versions.</p></div>
+  <div class="card"><b>Docker + Render for hosting (planned)</b><p class="small" style="margin-top:3px">One image holds the service and the built web app. We did not choose Vercel: it suits websites, while our service is a long-running Python program that loads AI models.</p></div>
+  <div class="card"><b>Mock government services behind adapters</b><p class="small" style="margin-top:3px">Each mock has the shape a real one would. Replacing it later means changing one adapter, not the system.</p></div>
+</div>
+<p class="small"><b>Testing:</b> pytest (179 service tests), Node test runner (50 database tests), Vitest (27 web tests) and Playwright with real Chrome (23 click-through checks across all three roles).</p>
+
+<!-- =================================================== 3 ROLES -->
+<div class="pb"></div>
+<div class="opener"><div class="no">3</div><div><h1>The three roles</h1><div class="sub">One login, one role. Each role sees different screens, and the database enforces it</div></div></div>
+
+<div class="role cit">
+  <header><div class="ic">👩</div><div><h3>Citizen</h3><small>Shown as "Person" in the app. The woman who claims the payment</small></div></header>
+  <div class="body">
+    <div>
+      <h4>What she does</h4>
+      <div class="steps"><span><b>1</b> Start</span><span><b>2</b> Permission</span><span><b>3</b> Her ID number</span><span><b>4</b> Household size</span><span><b>5</b> ID card photos</span><span><b>6</b> Account number</span><span><b>7</b> Send</span><span><b>8</b> Answer</span></div>
+      <ul>
+        <li>Before steps 2 to 7, a short <b>practice demo</b> plays: a hand taps a mock pad with made-up details and a voice explains, in Urdu or English. She then does it herself. Nothing in the demo is sent.</li>
+        <li>She types her ID number; the system shows her own record and asks "Is this you?". Typing someone else's number shows only that name, and her papers are then compared with that person's record.</li>
+        <li>She is asked how many people live in her home. The system answers only yes or no and never shows the number.</li>
+        <li>Only two photos: the ID card <b>front and back</b>. The system also checks that each photo is the right side.</li>
+        <li>She types her own mobile account number. Nothing is ever read back to her.</li>
+        <li>Three results: <b>Approved</b> (paid at once, in the mock), <b>Please send one more thing</b>, or <b>A person will look</b> with the exact reason.</li>
+        <li>After sending, "My claim" shows one box that updates by itself: <i>Our people are checking your claim</i>, the staff's request with a <b>Send it now</b> button, or <i>your payment has been sent, our staff will call you to confirm</i>.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Her protections</h4>
+      <ul>
+        <li>Her permission is recorded with a receipt. She can <b>take it back at any time</b> in "My data", and staff access stops at once.</li>
+        <li>She sees who has looked at her data.</li>
+        <li>Progress is saved after every step and on the phone; a <b>6-digit resume code</b> continues on another phone.</li>
+        <li>Voice on every page, big buttons, a number pad, no reading needed.</li>
+        <li>With no signal, photos and the final send wait on the phone and go out by themselves.</li>
+        <li>"Is it real?" checks any SMS for scams and only warns, never blocks.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="role hlp">
+  <header><div class="ic">🤝</div><div><h3>Helper</h3><small>A community worker who helps a woman claim, from his own phone</small></div></header>
+  <div class="body">
+    <div>
+      <h4>What he does</h4>
+      <ul>
+        <li>Sees only the families assigned to him. Names show as <code>F*** B***</code> until she gives permission.</li>
+        <li>To open a family he asks her three things and types the answers: her <b>ID number</b>, her <b>date of birth</b> and her <b>household size</b>. The server checks them against the government record and answers only yes or no, so he <b>never sees the record</b>. Three wrong tries lock the family for 30 minutes.</li>
+        <li>Right answers record <b>her</b> permission (to the office and to him), with a diary line. He then does the claim with her; her ID number and household size are not asked twice.</li>
+        <li>One family at a time, so papers cannot mix.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>What he cannot do</h4>
+      <ul>
+        <li>Approve or reject anything.</li>
+        <li>See a family he is not assigned to, or a name before permission.</li>
+        <li>Give permission for her without her three details.</li>
+        <li>Send the money to himself: a payout account that matches a helper's own number is held for a person.</li>
+        <li>Change rules or read the diary.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="role adm">
+  <header><div class="ic">🛡</div><div><h3>Admin</h3><small>Programme staff: reviews cases, sets rules, checks the record</small></div></header>
+  <div class="body">
+    <div>
+      <h4>What he does</h4>
+      <ul>
+        <li><b>Review queue:</b> only claims the system could not decide, least sure first, only for his own office and only with active consent. In the demo it starts empty.</li>
+        <li><b>Case page:</b> the decision with its checks and reasons; the "I am not sure" notes; a side-by-side table of her registration record, the government record and <b>what her ID card photo says</b> (differences in red, plus a face row); her papers, which he can open (every opening is recorded).</li>
+        <li><b>Decide:</b> Approve, Reject, Hold, or <b>Ask for more proof</b>, choosing which paper (ID front, back, both or another) and writing a message. Payments over Rs 20,000 need a second admin.</li>
+        <li><b>Rules:</b> versioned rule sets, never edited in place; a <b>Digital Twin</b> replays past cases under a draft before it goes live; a cost slider shows where the approval line is cheapest.</li>
+        <li><b>Evaluation and diary:</b> accuracy, false alarms, speed; "Verify the diary" checks nobody changed history.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>What the database stops</h4>
+      <ul>
+        <li>Approving his own case or one he helped with.</li>
+        <li>Deciding a case after consent was taken back.</li>
+        <li>Approving with an open hard flag (for example the same card photo sent by two different people).</li>
+        <li>Editing or deleting a decision or the diary.</li>
+        <li>Reading the identity table directly: he sees cases, decisions and the diary, with the ID number masked.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================== 4 AI -->
+<div class="pb"></div>
+<div class="opener"><div class="no">4</div><div><h1>The AI features</h1><div class="sub">What each one does, why it exists, how it works, and how well it did</div></div></div>
+<div class="callout avoid"><b>How the AI is used safely</b>
+  Hard rules run first and no score can override them. The checks and the model then decide between three outcomes: <b>approve alone</b> (only above 97% sure and no flag), <b>ask for one more paper</b>, or <b>send to a person</b>. Auto-reject is off, so the machine never says "no" alone. All numbers below come from <b>synthetic</b> data, so they show the method works, not how it would perform on real people.</div>
+
+<div class="ai"><div class="top"><h3>1. ID card reading and side check</h3><div class="tags"><span class="chip c-blue">Computer vision</span><span class="chip c-green">Pretrained, not trained by us</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Reads the name, father's name, ID number and birth date off the card photo, tells the front from the back, and compares with the government record.</p></div>
+    <div><h4>Why</h4><p>A clerk does this by eye today. It catches a wrong card and a wrong side at once and gives the exact reason.</p></div>
+    <div><h4>How it works</h4><p>RapidOCR (small open-source models on the CPU) reads the text on a fixed card layout. The back is recognised by its address lines. Numbers match digit by digit; names match ignoring case, with small spelling slips allowed.</p></div>
+  </div>
+  <div class="res"><b>Result:</b> caught every planted wrong name and number in our tests. <b>Limit:</b> a clean template card, not a real dirty photo.</div></div>
+
+<div class="ai"><div class="top"><h3>2. Face match</h3><div class="tags"><span class="chip c-blue">Computer vision</span><span class="chip c-green">Pretrained; threshold set by us</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Compares the face on the card with the photo in the government record.</p></div>
+    <div><h4>Why</h4><p>Stops a stranger using someone else's card.</p></div>
+    <div><h4>How it works</h4><p>OpenCV YuNet finds the face; SFace turns it into 128 numbers; two faces are "the same" at cosine similarity 0.50 or more. We chose the stricter line: a wrong "no match" only sends the claim to a person, a wrong "match" would wave a stranger through.</p></div>
+  </div>
+  <div class="res"><b>Result:</b> caught every wrong face in our tests. <b>Limit:</b> the line was set on a handful of AI-generated faces and needs a fairness test on real people.</div></div>
+
+<div class="ai"><div class="top"><h3>3. Name and duplicate matching</h3><div class="tags"><span class="chip c-amber">Classic algorithm</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Says whether two records are the same person: SAME, MAYBE or DIFFERENT.</p></div>
+    <div><h4>Why</h4><p>Pakistani names are spelled many ways. Merging the wrong two people, or missing a duplicate, both cost money.</p></div>
+    <div><h4>How it works</h4><p>Cleans the names (Muhammad, Mohammad, Muhammed become one; titles such as Bibi are dropped), then scores name 30%, ID number 30%, father's name 20%, date of birth 15%, district 5%. <b>Never SAME on a name alone</b>; unsure goes to a person.</p></div>
+  </div>
+  <div class="res"><b>Result:</b> 0 false merges on 10 labelled pairs. <b>Limit:</b> a small test.</div></div>
+
+<div class="ai"><div class="top"><h3>4. The decision model</h3><div class="tags"><span class="chip c-brand">Machine learning</span><span class="chip c-green">Trained by us</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Gives one honest number, "how likely is this claim truly eligible?", that the engine uses to choose approve, ask or person.</p></div>
+    <div><h4>Why</h4><p>"I am not sure" needs a confidence that can be trusted, so the number is calibrated: when it says 97%, about 97 in 100 should be right.</p></div>
+    <div><h4>How it works</h4><p>A logistic regression on 21 numbers (name match, document confidence, household score against the cutoff, flags, payout risk and more), wrapped in isotonic calibration. Trained on 12,000 synthetic cases from our own generator, with a fixed seed so it repeats.</p></div>
+  </div>
+  <div class="res"><b>Result (2,000 fresh cases):</b> 38% approved alone, 56% to a person, 6% asked for proof; 14 wrong approvals of 758; 0 wrong rejections; about 6.6 ms a decision. <b>Limit:</b> trained and tested on data from the same generator.</div></div>
+
+<div class="ai"><div class="top"><h3>5. Scam message checker</h3><div class="tags"><span class="chip c-brand">Machine learning</span><span class="chip c-green">Trained by us</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Reads an SMS and says Looks real, Be careful, or Looks like a scam, with plain reasons in Urdu and English.</p></div>
+    <div><h4>Why</h4><p>Fake relief messages are common and cost families a quarter's money. It only warns; it never blocks.</p></div>
+    <div><h4>How it works</h4><p>Letter pieces of the text (works for English, Roman Urdu and Urdu script) plus nine rule signals such as asking for a PIN, a fee, an urgent threat or a strange link, fed to a logistic regression. A direct ask for a PIN, OTP or ID number is never labelled safe.</p></div>
+  </div>
+  <div class="res"><b>Result:</b> 92.9% on 56 test messages; 1 false alarm in 27 safe messages; 1 missed scam. <b>Limit:</b> about 480 training messages that we wrote ourselves.</div></div>
+
+<div class="ai"><div class="top"><h3>6. Photo integrity checks</h3><div class="tags"><span class="chip c-amber">Image maths</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Checks every photo for blur, signs of editing, and whether the same picture was sent before, including by another person.</p></div>
+    <div><h4>Why</h4><p>Catches blurry photos (ask again), pasted or edited papers, and one card used for two families.</p></div>
+    <div><h4>How it works</h4><p>A sharpness score; error-level analysis (a pasted area compresses differently); file and picture fingerprints. An unclear photo gets "please take it again"; the system never guesses.</p></div>
+  </div>
+  <div class="res"><b>Result:</b> 21 of 21 invented images classed as expected. <b>Limit:</b> a skilled forgery would pass; a person always decides doubtful cases.</div></div>
+
+<div class="ai"><div class="top"><h3>7. "I am not sure" notes and similar cases</h3><div class="tags"><span class="chip c-amber">Rules, not learned</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Gives the admin one page: what was checked, why it is unsure, what is missing, what to ask, plus the three past labelled cases with the closest household score.</p></div>
+    <div><h4>Why</h4><p>A person who must decide should not have to dig. This is the "human hand-off" done well.</p></div>
+    <div><h4>How it works</h4><p>Built from the decision trace and facts by rules and templates. It is useful but it is <b>not a learned model</b>, and we say so.</p></div>
+  </div>
+  <div class="res"><b>Result:</b> created for every claim sent to a person.</div></div>
+
+<div class="ai"><div class="top"><h3>8. Digital Twin and cost curve</h3><div class="tags"><span class="chip c-amber">Simulation</span></div></div>
+  <div class="cols">
+    <div><h4>What it does</h4><p>Shows what a rule change would do before it goes live, and where the approval line is cheapest.</p></div>
+    <div><h4>Why</h4><p>Policy teams change rules often. A wrong change affects thousands of families.</p></div>
+    <div><h4>How it works</h4><p>Replays up to 500 past cases under a draft rule and counts who changes zone and the total cost (wrong approval 100, wrong rejection 20, person reviewing 3, asking for proof 1). The cost curve plots expected cost against the approval line.</p></div>
+  </div>
+  <div class="res"><b>Example from the demo:</b> a draft version moved 56 cases (22 from approved to person).</div></div>
+
+<div class="ai"><div class="top"><h3>9. Policy answers with sources, and recorded voice</h3><div class="tags"><span class="chip c-amber">Search</span><span class="chip c-green">Pretrained voices</span></div></div>
+  <div class="cols">
+    <div><h4>What they do</h4><p>Policy search answers a plain question with the matching policy clause as its source and never invents an answer. The voice speaks every prompt, reason and practice demo.</p></div>
+    <div><h4>Why</h4><p>A woman, or an admin, can ask "why?" and get the real text. Voice means no reading is needed.</p></div>
+    <div><h4>How they work</h4><p>Search: word and word-pair matching over short clauses. Voice: Microsoft neural voices recorded once (154 files), played from the phone with no internet.</p></div>
+  </div>
+  <div class="res"><b>Limit:</b> no voice input yet (speech to text was cut), and a native Urdu speaker must review the Urdu.</div></div>
+
+<p class="small"><b>What we did not use:</b> no hosted AI service and no large language model. There is an optional wrapper that could reword explanations, switched off by default and never used to make a decision.</p>
+
+<!-- =================================================== 5 LIMITS -->
+<div class="pb"></div>
+<div class="opener"><div class="no">5</div><div><h1>Limitations</h1><div class="sub">What we have not solved, in the order that matters most. Say these out loud before anyone asks</div></div></div>
+
+<div class="lim" style="border-color:var(--red);background:#FFFBFA">
+  <div class="t"><h3>1. The helper commission problem</h3><span class="chip c-red">Biggest open risk</span></div>
+  <p>Studies and news reports say some agents and helpers take a cut (Rs 1,000 to 2,000) from the woman's payment, and she feels she cannot refuse. A helper beside her is exactly the person who can ask. Software alone cannot stop a person asking for cash after the money has reached her account.</p>
+  <p><b>What we did:</b> the money goes to <b>her own</b> account, typed by her. A payout account that matches any helper's own number is held for a person. A helper only opens a family with three details she gives him, can hold one family at a time, and cannot approve anything. Every action is in an unchangeable diary.</p>
+  <p><b>What we did not do:</b> we cannot see who owns an account (we only check its shape), and the three details are not secret (neighbours may know them). A planned safeguard, <b>not built</b>: after every payout, an automatic phone call asks each woman "press 1 if you received the full amount, press 2 if anyone took or asked for money", and a confirmed complaint removes the helper.</p></div>
+
+<div class="lim"><div class="t"><h3>2. All data and numbers are synthetic</h3><span class="chip c-red">High</span></div>
+  <p>People, ID numbers, households, cases, scam messages and training data are invented, and we wrote the data generator. The accuracy numbers measure how well the models learned <b>our own rules</b>, not how they would do on real families.</p>
+  <p class="fix"><b>Next:</b> train on real, approved, de-identified data under a data agreement, and measure everything again.</p></div>
+
+<div class="lim"><div class="t"><h3>3. The ID card reader and face match are tested on clean sample cards</h3><span class="chip c-red">High</span></div>
+  <p>The reader works on one fixed English card layout. A real card (Urdu text, glare, bent corners, a thumb over the corner) needs a stronger model. The face line (0.50) was set on a handful of AI-generated faces; it needs testing on different ages and skin tones for fairness. Only the demo person has a registry photo; for others the face check is skipped, never guessed.</p>
+  <p class="fix"><b>Next:</b> test on messy real photos, report the honest number, and run a fairness check.</p></div>
+
+<div class="lim"><div class="t"><h3>4. Small test sets</h3><span class="chip c-amber">Medium</span></div>
+  <p>Scam checker: 56 messages. Name matching: 10 pairs. Photo checks: 21 images. They show the method works but are too small to promise real accuracy. Edit detection is a simple heuristic that a skilled forger would pass.</p></div>
+
+<div class="lim"><div class="t"><h3>5. The three services are mocks, and nothing is really paid</h3><span class="chip c-amber">Medium</span></div>
+  <p>Identity (like NADRA), household survey (like NSER) and payment (like Raast) are made up, and the mock pays instantly after approval. A real payment rail confirms later and can fail, so a real system needs pending, failed and retry states.</p></div>
+
+<div class="lim"><div class="t"><h3>6. Language and voice</h3><span class="chip c-amber">Medium</span></div>
+  <p>There is <b>no voice input</b>: she listens and taps. The Urdu text and the computer voices have not been reviewed by a native speaker, and the longer new staff sentences appear in English on the Urdu staff view. Only Urdu and English exist; Sindhi, Pashto and Punjabi do not.</p></div>
+
+<div class="lim"><div class="t"><h3>7. Weak internet was tested by simulation</h3><span class="chip c-amber">Medium</span></div>
+  <p>We cut the connection in Chrome and the photo and the send waited and went through afterwards. We did not test on a real phone on a real network. The badge says only online or offline; there is no "weak signal" state.</p></div>
+
+<div class="lim"><div class="t"><h3>8. Not yet deployed; some paths untested</h3><span class="chip c-amber">Medium</span></div>
+  <p>The app is not on a public link yet. The Docker image is written but untested. The hosted-login mode (Supabase Auth) is written but untested; the login we run is the local one. Rate limiting lives in the service's memory, which is fine for one server only.</p></div>
+
+<div class="lim"><div class="t"><h3>9. The record itself</h3><span class="chip c-blue">Low</span></div>
+  <p>The diary cannot be changed by users or admins, but someone with full database-owner power could rewrite it. Helper proof by ID number, birth date and household size is not a secret; a one-time SMS code to her registered phone would be stronger. The scam checker only warns, by design.</p></div>
+
+<!-- =================================================== 6 SCALE -->
+<div class="pb"></div>
+<div class="opener"><div class="no">6</div><div><h1>How it scales</h1><div class="sub">From one laptop to a programme with about 10 to 12 million households a quarter</div></div></div>
+<p class="lead">The design already separates what must grow (photo checks, database, queues) from what stays small (the decision, about 6.6 ms). Scaling is mostly adding capacity and replacing mocks, not rewriting.</p>
+
+<div class="road">
+  <div class="ph"><h4>Phase 1: Pilot</h4><div class="scale">one district, thousands of women</div>
+    <ul><li>Real identity, survey and payment connections replace the three mocks (one adapter each)</li><li>Test the card reader on real photos; fairness check on the face model</li><li>Native Urdu review; add Sindhi and Pashto</li><li>Deploy on Render with Supabase; real phones on real networks</li><li>Build and test the payout confirmation call</li></ul></div>
+  <div class="ph"><h4>Phase 2: Province</h4><div class="scale">hundreds of thousands</div>
+    <ul><li>Several service copies behind a load balancer (the service keeps no state)</li><li>Move rate limits to a shared store such as Redis</li><li>Photo analysis in background workers; photos in object storage, not local disk</li><li>Database connection pooler and read replicas; split big tables by quarter</li><li>Voice input in Urdu; USSD or SMS for keypad phones</li></ul></div>
+  <div class="ph"><h4>Phase 3: National</h4><div class="scale">millions of households</div>
+    <ul><li>Auto-scaling workers for the quarter-start peak</li><li>Content network for the app and voice files</li><li>Publish the diary hash outside the database</li><li>Monitoring of accuracy, false alarms and fairness; retrain from approved human decisions</li><li>Same rails reused for other benefit programmes</li></ul></div>
+</div>
+
+<h2>What grows, and how</h2>
+<table>
+  <tr><th style="width:24%">Part</th><th style="width:36%">Today</th><th>To scale</th></tr>
+  <tr><td class="k">Decision engine</td><td>About 6.6 ms per decision on one CPU</td><td>Not the bottleneck. Stateless, so copies run side by side.</td></tr>
+  <tr><td class="k">Photo analysis (reading, face, integrity)</td><td>Runs inside the request, on the CPU</td><td><b>The real cost.</b> Move to a job queue and workers, measure seconds per photo, then size the workers for the peak. A claim is two photos.</td></tr>
+  <tr><td class="k">Database</td><td>One Postgres on Supabase; row locks on every table</td><td>Pooler, read replicas, partition cases and the diary by quarter. Row-level security stays, so access rules do not change.</td></tr>
+  <tr><td class="k">Staff review</td><td>One queue, one office</td><td>Queues by office, service-level targets, second approvers. Fewer cases reach a person as the model improves on real data.</td></tr>
+  <tr><td class="k">Rules and policy</td><td>Versioned, previewed with the Digital Twin</td><td>Already built for change: a new quarter's amount or cutoff is a new version, no deploy.</td></tr>
+  <tr><td class="k">Channels</td><td>Smartphone web app with a helper</td><td>SMS or USSD and phone-call (IVR) flows for keypad phones; agent network; voice input in regional languages.</td></tr>
+</table>
+
+<div class="callout blue avoid"><b>An honest note on capacity</b>We measured the decision model (about 6.6 ms) and nothing else at scale. We have <b>not</b> load-tested the service, so we do not claim a number of claims per second. The first scaling step is to measure photo analysis under load and size the workers from that measurement.</div>
+
+<h2>What stays the same at any size</h2>
+<div class="grid g2">
+  <div class="card"><b>The rule that a person decides every "no".</b><p class="small" style="margin-top:3px">The machine approves alone only above 97% sure, and never rejects alone.</p></div>
+  <div class="card"><b>Access enforced in the database.</b><p class="small" style="margin-top:3px">More copies of the service do not weaken who can see which row.</p></div>
+  <div class="card"><b>An unchangeable record of every action.</b><p class="small" style="margin-top:3px">The diary and decision history make the system auditable as it grows.</p></div>
+  <div class="card"><b>Honest numbers.</b><p class="small" style="margin-top:3px">Every accuracy figure is labelled with the data it came from, and re-measured on real data before any claim of real performance.</p></div>
+</div>
+
+<div class="quote">Sahara Relief is a prototype that shows the last mile can be built so that the woman can use it, the helper cannot quietly misuse it, and the machine knows when to ask a person.</div>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+# The laptop fallback: everything on one machine, no cloud needed.
+# NOT TESTED on this laptop (no Docker installed).
+#   docker compose up --build
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: sahara
+    ports: ["5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/local:/docker-entrypoint-initdb.d/00_local:ro
+  app:
+    build: .
+    depends_on: [db]
+    environment:
+      AUTH_MODE: local
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/sahara
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-long-random-string}
+      CORS_ORIGINS: http://localhost:8000
+    ports: ["8000:8000"]
+volumes:
+  pgdata:

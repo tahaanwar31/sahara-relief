@@ -1,0 +1,16 @@
+.venv
+node_modules
+**/node_modules
+.git
+.env
+*.log
+*.err
+docs
+service/storage
+service/tests
+web/tests
+web/scripts
+scripts
+.wheelhouse
+__pycache__
+**/__pycache__

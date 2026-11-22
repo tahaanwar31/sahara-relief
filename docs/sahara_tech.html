@@ -1,0 +1,94 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Sahara Relief: Niche, Stack and Models</title>
+<style>
+@page { size: A4; margin: 13mm 14mm 14mm; }
+*{box-sizing:border-box}
+body{font-family:"Segoe UI",Arial,sans-serif;font-size:8.6pt;line-height:1.36;color:#2B2420;margin:0}
+h1{font-size:17pt;margin:0 0 1px;color:#2B2420}
+.sub{color:#7B6F66;font-size:8.4pt;margin-bottom:6px}
+h2{font-size:10.6pt;margin:9px 0 3px;color:#C9552A;border-bottom:1.2px solid #E2693B;padding-bottom:1px}
+h3{font-size:9pt;margin:6px 0 2px}
+p{margin:2px 0 3px}
+ul{margin:2px 0 3px;padding-left:14px} li{margin:0 0 1px}
+table{border-collapse:collapse;width:100%;margin:3px 0 5px;font-size:8pt}
+th{background:#2B2420;color:#fff;text-align:left;padding:2px 5px}
+td{border:1px solid #E5DCD2;padding:2px 5px;vertical-align:top}
+tr:nth-child(even) td{background:#FBF8F4}
+code{font-family:Consolas,monospace;font-size:7.8pt;background:#F3ECE4;padding:0 2px;border-radius:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{background:#FBE8DE;border-left:3px solid #E2693B;padding:3px 7px;margin:4px 0;font-size:8.2pt}
+.pb{page-break-before:always}
+</style></head><body>
+
+<h1>Sahara Relief: niche, stack and models</h1>
+<div class="sub">Coder's Cup '26, "The Last Mile: AI on Public Rails". Technical design note for the team. Prototype on synthetic data only.</div>
+
+<h2>1. Niche: quarterly cash relief claims (social protection)</h2>
+<p><b>What we built.</b> A multi-user public-service platform for one mock programme: a quarterly cash-relief claim (BISP-style). Three roles: <b>Person</b> (eligible for relief), <b>Helper</b> (assists many families, one at a time, with each family's own PIN as consent) and <b>Admin</b> (reviews uncertain cases, edits rules, runs the replay and evaluation, verifies the audit diary). Eligibility, identity, payout and registry services are mocked.</p>
+<h3>Why this niche</h3>
+<ul>
+<li><b>The brief's eight challenges all occur naturally here:</b> cost-aware decisions (a wrong approval and a wrong rejection have very different costs), "I am not sure" routing, messy identity data (name variants), rule changes without redeploy, explainable decisions and an audit trail, consent with take-back, non-reader and weak-network users, and scam / forged-document detection. Most other services (licence renewal, utility bills) exercise only two or three of these.</li>
+<li><b>Real, large, measurable need</b> (secondary sources; verify before quoting): women's literacy about 54% vs 73% for men; about 44.7% of Pakistanis below the World Bank $4.20/day line; 10 to 12 million BISP families; 68% of women own a phone vs 93% of men, and 28% of women internet users use a borrowed phone; about 140 million people live in coverage but do not use mobile internet; agents reportedly deduct Rs 1,000 to 2,000 per payment.</li>
+<li><b>Asymmetric stakes justify a human-in-the-loop design</b> and make "cost of being wrong" a real parameter instead of a decoration.</li>
+<li><b>Honest scope:</b> one service done end to end (claim, decision, review, audit) beats five shallow ones. Alternatives considered and rejected: licence/passport renewal (low stakes, few scams), utility subsidy (single rule, little identity ambiguity), health-card enrolment (needs clinical data we cannot fake credibly).</li>
+</ul>
+
+<h2>2. Architecture</h2>
+<table><tr><th style="width:17%">Layer</th><th>Design</th></tr>
+<tr><td>Client</td><td>React 18 + TypeScript PWA. Hand-written hash router, one API layer with a live mode and an in-browser mock mode (same contract, used by tests and demos). Offline outbox in IndexedDB with idempotent replay. RTL Urdu and English switch on every screen, 108 pre-recorded audio prompts.</td></tr>
+<tr><td>Service</td><td>FastAPI (Python 3.11+). Stateless. Each request opens a transaction, runs <code>SET LOCAL ROLE authenticated</code> and sets <code>request.jwt.claims</code>, so <b>Postgres row-level security enforces access</b>, not the app code. A master connection exists only in <code>service_writes.py</code> for engine writes (decisions, evaluation, audit helpers).</td></tr>
+<tr><td>Data</td><td>PostgreSQL on Supabase (Mumbai), reached through the Session pooler with a small connection pool. 27 tables, 71 RLS policies, 65 triggers, hash-chained append-only <code>audit_log</code>, immutable <code>rule_sets</code> (one active), consent receipts, helper sessions, drafts and idempotency keys.</td></tr>
+<tr><td>Auth</td><td><code>AUTH_MODE=local</code>: bcrypt in <code>app.local_login</code>, HS256 token; the role is read from <code>user_roles</code> on every request (token claims are ignored). A Supabase-Auth mode is written but untested.</td></tr>
+<tr><td>Decision engine</td><td>In-process Python: hard rules, then calibrated model, then zone routing (section 4).</td></tr></table>
+
+<h2>3. Tech stack and why</h2>
+<table><tr><th style="width:19%">Choice</th><th style="width:34%">Why we chose it</th><th>Alternative not taken</th></tr>
+<tr><td>React 18 + TypeScript + Vite</td><td>Type-checked API contract shared with the mock layer; fast build; code-split pages so a citizen never downloads admin code.</td><td>Next.js (SSR not needed for a PWA behind login); Flutter (slower to iterate in 48 h).</td></tr>
+<tr><td>Tailwind CSS, Inter + Noto Naskh</td><td>Consistent design tokens (charcoal/terracotta palette), RTL support, readable Urdu script.</td><td>Component kits (generic look).</td></tr>
+<tr><td>PWA + IndexedDB (<code>idb</code>)</td><td>Weak-signal users: save locally, send later, resume code on another phone.</td><td>Native app (install friction).</td></tr>
+<tr><td>FastAPI + Pydantic</td><td>Typed request validation (<code>extra=forbid</code> blocks mass assignment), automatic OpenAPI, same language as the ML code, no model-serving hop.</td><td>Node/Express (would split ML into a second service).</td></tr>
+<tr><td>psycopg 3, direct SQL</td><td>Needed per-request <code>SET LOCAL ROLE</code> and claims so RLS applies; ORMs hide this.</td><td>SQLAlchemy ORM; Supabase REST client.</td></tr>
+<tr><td>PostgreSQL + RLS (Supabase)</td><td>Access rules live in the database: a bug in app code cannot leak rows. Triggers enforce case state moves, separation of duties, two-person approval and the audit chain.</td><td>App-level permission checks only.</td></tr>
+<tr><td>scikit-learn, rapidfuzz, OpenCV/Pillow</td><td>Small, inspectable, CPU-only models; a logistic regression gives per-feature weights for explanations.</td><td>Gradient boosting / deep nets (less explainable); hosted LLM (cost, privacy, non-determinism).</td></tr>
+<tr><td>Testing</td><td><code>node:test</code> + PGlite for 50 database tests (RLS matrix, audit, rules, migrations); pytest 159 service tests (matrix of every endpoint by role, full claim flow, consent take-back); Vitest 27 web tests; Playwright-core + Chrome live smoke and a screen layout scanner (overlap, clipping, tap size, both languages).</td><td>Manual testing only.</td></tr>
+<tr><td>Docker (planned: Render near the DB)</td><td>One container for the service, region next to Supabase Mumbai (an earlier Seoul region cost 20 to 60 s per request). Dockerfile and compose are written but not yet tested; deployment has not been done.</td><td>Vercel serverless (cold starts, connection limits).</td></tr></table>
+
+
+<h2>4. AI and decision pipeline</h2>
+<p><b>Order of work for each claim:</b> (1) hard rules, (2) facts and checks, (3) calibrated probability, (4) cost-based zone, (5) explanation and trace stored with the rule-set version and checksum. Hard rules always beat the model: no consent, invalid or expired CNIC, deceased flag, possible duplicate identity, payout over cap, payout account shared / changed in 30 days / owned by a helper, scam flag, edited document.</p>
+<table><tr><th style="width:17%">Component</th><th style="width:40%">Model and parameters</th><th>Why</th></tr>
+<tr><td>Eligibility model</td><td>Logistic regression, 21 features (household PMT score, identity band, document confidence, payout flags, etc.). Trained on <b>12,000 synthetic cases</b>, <code>C=100</code>, <code>max_iter=2000</code>, <b>isotonic calibration</b> (<code>cv=5</code>), seed 20261121. Model version and probability are saved in every decision.</td><td>Calibrated probabilities are required for cost thresholds; weights are printable, so any decision can answer "why".</td></tr>
+<tr><td>Zones</td><td><b>AUTO</b> if p &ge; 0.97 and no hard rule. The line is <code>1 &minus; review_cost / wrong_approval_cost = 1 &minus; 3/100</code>. <b>ASK_MORE</b> if a specific proof is missing. Otherwise <b>HUMAN</b>. Auto-reject line 0.15 exists but is <b>switched off</b>: the system never rejects alone.</td><td>Expected-cost reasoning: a wrong approval (100) costs far more than a human review (3), so the machine acts only when very sure. Admins edit costs and the line; no code change.</td></tr>
+<tr><td>Identity matching</td><td>Roman/Urdu name normaliser, rapidfuzz scores, weighted sum: name .30, CNIC .30, father .20, DOB .15, district .05. Bands: SAME &ge; .95, MAYBE &ge; .82, else DIFFERENT. Never "same person" on a name alone; MAYBE shows a side-by-side table.</td><td>Challenge 3 (name variants such as Muhammad / Mohammad / Muhammed).</td></tr>
+<tr><td>Document checks</td><td>Blur by Laplacian variance (&lt; 60 flagged), error-level analysis for edits, SHA-256 for duplicate uploads, OCR-style confidence per field.</td><td>Classical, fast, deterministic checks that run on a phone-grade photo.</td></tr>
+<tr><td>Scam detector</td><td>TF-IDF (<code>char_wb</code> n-grams 2 to 5) + 9 hand rules (urgent words, asks for PIN, fee, unofficial link, wrong sender code vs the real 8171-style short code) + logistic regression (<code>C=8</code>), about 480 synthetic Urdu/Roman/English messages. Labels: looks real / be careful / looks like a scam at thresholds 0.62 and 0.30. Warns only, never blocks.</td><td>Character n-grams survive Roman-Urdu spelling variation; reasons are shown in plain words.</td></tr>
+<tr><td>Policy search</td><td>TF-IDF retrieval over the programme policy lines; returns the best lines with sources, no generated text.</td><td>Answers questions without hallucination.</td></tr>
+<tr><td>Digital Twin</td><td>Replays up to 500 past cases under a draft rule set and reports who changes zone, approval count change and before/after cost, then the admin may activate it.</td><td>Safe policy change; challenge 4.</td></tr>
+<tr><td>Cost curve</td><td>Expected cost against approval line for the entered costs (preview only).</td><td>Shows why 0.97 is where it is.</td></tr>
+<tr><td>Optional LLM</td><td>Module exists with <code>LLM_PROVIDER=none</code> by default. Every feature works without it; nothing depends on a hosted model.</td><td>Privacy and determinism.</td></tr></table>
+
+<h3>Evaluation (synthetic labelled set of 2,000 cases, produced by the Evaluation page)</h3>
+<table><tr><th>Metric</th><th>Result</th></tr>
+<tr><td>Zone split</td><td>AUTO 758, HUMAN 1,117, ASK_MORE 125</td></tr>
+<tr><td>Wrong approvals (the costly error)</td><td>14</td></tr>
+<tr><td>Total expected cost</td><td>4,876 against 5,500 for the always-review baseline</td></tr>
+<tr><td>Scam checker</td><td>Accuracy 92.9%, false-alarm rate 3.7%</td></tr></table>
+<div class="note"><b>Limits stated plainly:</b> all training and test data is synthetic and generated by us, so these numbers show the pipeline works, not real-world accuracy. Urdu text needs a native-speaker review. Research figures come mostly from secondary sources and should be checked at source before quoting to judges.</div>
+
+<h2>5. Safety and compliance design</h2>
+<div class="two"><div><ul>
+<li><b>Row-level security</b> on all 27 tables; the role comes from the database, never the token.</li>
+<li><b>Separation of duties:</b> nobody approves their own case or one they helped with; payments over Rs 20,000 need two different admins; rule versions are immutable and only one is live.</li>
+<li><b>Consent:</b> receipts, checked on every read, take-back cuts access at once; a helper cannot grant consent, the woman types her own PIN (local mode).</li>
+</ul></div><div><ul>
+<li><b>Audit diary:</b> append-only, hash-chained rows, a verifier re-computes the chain; update, delete and truncate are refused by triggers.</li>
+<li><b>Abuse limits:</b> login 40/min per IP and 8/min per email, uploads 20/min, scam check 30/min, PIN consent 8/min; <code>extra=forbid</code> on inputs; idempotency keys on submits.</li>
+<li><b>Hard flags beat any score</b> (deceased, expired CNIC, missing consent).</li>
+</ul></div></div>
+
+<h2>6. Quality and honest gaps</h2>
+<ul>
+<li><b>Verified:</b> 50 database, 159 service and 27 web tests pass; live Chrome run against the real service and database for all three roles; layout scan of 52 screens in both languages.</li>
+<li><b>Not done or not verified:</b> deployment (Docker untested), Supabase-Auth login mode and PIN proof in that mode, native Urdu review, verification of research figures at source, demo video and slides.</li>
+<li><b>Security note:</b> the demo database password was shared in chat and a team <code>.env</code> file; rotate it after the event. All accounts and data are fake.</li>
+</ul>
+</body></html>

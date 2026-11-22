@@ -1,0 +1,51 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource/noto-naskh-arabic/arabic-400.css';
+@import '@fontsource/noto-naskh-arabic/arabic-700.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply text-ink font-sans antialiased; font-size: 17px; line-height: 1.55; background: #F8F4EF; }
+  html[lang='ur'] body { @apply font-urdu; font-size: 19px; line-height: 1.85; }
+  h1, h2, h3 { @apply font-bold tracking-tight; }
+  html[lang='ur'] h1, html[lang='ur'] h2, html[lang='ur'] h3 { line-height: 1.65; }
+  html[lang='ur'] h1 + p, html[lang='ur'] h2 + p, html[lang='ur'] h3 + p { margin-top: .4rem; }
+  html[lang='ur'] .label { line-height: 1.8; }
+  h1 { @apply text-3xl; letter-spacing: -0.025em; }
+  h2 { @apply text-xl; }
+  :focus-visible { outline: 3px solid #0e6b63; outline-offset: 3px; border-radius: 8px; }
+  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+  /* numbers and codes stay left-to-right inside Urdu text */
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-3 rounded-2xl px-7 min-h-[56px] text-lg font-semibold
+      border border-transparent transition-all duration-200 select-none
+      disabled:opacity-50 disabled:cursor-not-allowed active:translate-y-px active:scale-[.99];
+  }
+  .btn-sm { @apply min-h-[44px] px-4 text-base rounded-xl gap-2; }
+  .btn-primary { @apply bg-brand text-white shadow-lift hover:bg-brand-dark hover:-translate-y-px; }
+  .btn-success { @apply bg-ink text-white hover:bg-black hover:-translate-y-px; }
+  .btn-secondary { @apply bg-white text-ink border-line shadow-sm hover:bg-paper; }
+  .btn-danger { @apply bg-danger text-white hover:bg-[#8f1e18]; }
+  .btn-danger-outline { @apply bg-white text-danger border-danger/40 hover:bg-danger-soft; }
+  .btn-ghost { @apply bg-transparent text-brand hover:bg-brand-soft; }
+
+  .card { @apply bg-white rounded-card border border-line shadow-card p-6; }
+  .input {
+    @apply w-full rounded-2xl border border-line bg-white px-4 min-h-[56px] text-lg
+      placeholder:text-muted/60 hover:border-brand/40 focus:border-brand focus:ring-4 focus:ring-brand/20 focus:outline-none transition;
+  }
+  .label { @apply block text-sm font-semibold text-muted mb-1; }
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold border; }
+  .tbl th { @apply text-start text-xs uppercase tracking-wide text-muted font-semibold px-3 py-2 border-b border-line; }
+  .tbl td { @apply px-3 py-2.5 border-b border-line/70 align-top; }
+  .tbl tbody tr { @apply hover:bg-brand-soft/40; }
+}
+
+@keyframes wave { 0%, 100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+.wave-bar { animation: wave .9s ease-in-out infinite; transform-origin: center; }

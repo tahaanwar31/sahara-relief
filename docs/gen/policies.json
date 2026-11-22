@@ -1,0 +1,499 @@
+[
+[
+"api_keys",
+"keys_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'admin'::text) AND (created_by = app.current_user_id()))"
+],
+[
+"api_keys",
+"keys_select",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"api_keys",
+"keys_update",
+"UPDATE",
+"(app.\"current_role\"() = 'admin'::text)",
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"audit_log",
+"audit_select_own",
+"SELECT",
+"((actor_id = app.current_user_id()) OR ((details ->> 'subject_id'::text) = (app.current_user_id())::text))",
+null
+],
+[
+"audit_log",
+"audit_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"case_events",
+"events_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = ANY (ARRAY['citizen'::text, 'helper'::text, 'admin'::text])) AND (actor_id = app.current_user_id()) AND (case_id IN ( SELECT cases.id\n   FROM cases)))"
+],
+[
+"case_events",
+"events_select",
+"SELECT",
+"(case_id IN ( SELECT cases.id\n   FROM cases))",
+null
+],
+[
+"case_flags",
+"flags_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'admin'::text) AND (opened_by = app.current_user_id()) AND (case_id IN ( SELECT cases.id\n   FROM cases)))"
+],
+[
+"case_flags",
+"flags_select",
+"SELECT",
+"((app.\"current_role\"() = 'admin'::text) AND (case_id IN ( SELECT cases.id\n   FROM cases)))",
+null
+],
+[
+"case_flags",
+"flags_update",
+"UPDATE",
+"((app.\"current_role\"() = 'admin'::text) AND (case_id IN ( SELECT cases.id\n   FROM cases)))",
+"((app.\"current_role\"() = 'admin'::text) AND (case_id IN ( SELECT cases.id\n   FROM cases)))"
+],
+[
+"case_notes",
+"notes_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'admin'::text) AND (case_id IN ( SELECT cases.id\n   FROM cases)))"
+],
+[
+"case_notes",
+"notes_select",
+"SELECT",
+"((app.\"current_role\"() = 'admin'::text) AND (case_id IN ( SELECT cases.id\n   FROM cases)))",
+null
+],
+[
+"cases",
+"cases_insert_citizen",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'citizen'::text) AND (owner_user_id = app.current_user_id()) AND (helper_user_id IS NULL) AND (status = 'draft'::text) AND (person_id = app.current_person_id()))"
+],
+[
+"cases",
+"cases_insert_helper",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'helper'::text) AND (helper_user_id = app.current_user_id()) AND (status = 'draft'::text) AND app.helper_can_see_person(person_id) AND (owner_user_id = app.person_user(person_id)))"
+],
+[
+"cases",
+"cases_select_helper",
+"SELECT",
+"app.helper_can_see_person(person_id)",
+null
+],
+[
+"cases",
+"cases_select_officer",
+"SELECT",
+"app.officer_sees_case(owner_user_id, office, status)",
+null
+],
+[
+"cases",
+"cases_select_owner",
+"SELECT",
+"(owner_user_id = app.current_user_id())",
+null
+],
+[
+"cases",
+"cases_update_admin",
+"UPDATE",
+"(app.\"current_role\"() = 'admin'::text)",
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"cases",
+"cases_update_citizen",
+"UPDATE",
+"((app.\"current_role\"() = 'citizen'::text) AND (owner_user_id = app.current_user_id()) AND (status = ANY (ARRAY['draft'::text, 'awaiting_proof'::text])))",
+"((owner_user_id = app.current_user_id()) AND (status = ANY (ARRAY['draft'::text, 'awaiting_proof'::text, 'submitted'::text])))"
+],
+[
+"cases",
+"cases_update_helper",
+"UPDATE",
+"(app.helper_can_see_person(person_id) AND (status = ANY (ARRAY['draft'::text, 'awaiting_proof'::text])))",
+"((helper_user_id = app.current_user_id()) AND (status = ANY (ARRAY['draft'::text, 'awaiting_proof'::text, 'submitted'::text])))"
+],
+[
+"cases",
+"cases_update_officer",
+"UPDATE",
+"app.officer_sees_case(owner_user_id, office, status)",
+"((app.\"current_role\"() = 'admin'::text) AND (office = app.current_office()))"
+],
+[
+"consent_events",
+"cevents_select",
+"SELECT",
+"(consent_id IN ( SELECT consents.id\n   FROM consents))",
+null
+],
+[
+"consents",
+"consents_insert_own",
+"INSERT",
+null,
+"((subject_id = app.current_user_id()) AND (granted_by = app.current_user_id()) AND (status = 'granted'::text))"
+],
+[
+"consents",
+"consents_select_helper",
+"SELECT",
+"((app.\"current_role\"() = 'helper'::text) AND app.helper_can_see_person(app.person_of_user(subject_id)))",
+null
+],
+[
+"consents",
+"consents_select_own",
+"SELECT",
+"(subject_id = app.current_user_id())",
+null
+],
+[
+"consents",
+"consents_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"consents",
+"consents_update_own",
+"UPDATE",
+"(subject_id = app.current_user_id())",
+"((subject_id = app.current_user_id()) AND (status = 'withdrawn'::text))"
+],
+[
+"data_quality_queue",
+"dq_select",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"data_quality_queue",
+"dq_update",
+"UPDATE",
+"(app.\"current_role\"() = 'admin'::text)",
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"decisions",
+"decisions_insert_officer",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'admin'::text) AND (actor_type = 'user'::text) AND (actor_id = app.current_user_id()) AND (case_id IN ( SELECT cases.id\n   FROM cases)))"
+],
+[
+"decisions",
+"decisions_select",
+"SELECT",
+"(case_id IN ( SELECT cases.id\n   FROM cases))",
+null
+],
+[
+"doc_checks",
+"doc_checks_select",
+"SELECT",
+"(document_id IN ( SELECT documents.id\n   FROM documents))",
+null
+],
+[
+"documents",
+"documents_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = ANY (ARRAY['citizen'::text, 'helper'::text])) AND (uploaded_by = app.current_user_id()) AND (case_id IN ( SELECT cases.id\n   FROM cases\n  WHERE (cases.status = ANY (ARRAY['draft'::text, 'awaiting_proof'::text])))))"
+],
+[
+"documents",
+"documents_select",
+"SELECT",
+"(case_id IN ( SELECT cases.id\n   FROM cases))",
+null
+],
+[
+"drafts",
+"drafts_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = ANY (ARRAY['citizen'::text, 'helper'::text])) AND (case_id IN ( SELECT cases.id\n   FROM cases\n  WHERE (cases.status = ANY (ARRAY['draft'::text, 'awaiting_proof'::text])))))"
+],
+[
+"drafts",
+"drafts_select",
+"SELECT",
+"((app.\"current_role\"() = ANY (ARRAY['citizen'::text, 'helper'::text])) AND (case_id IN ( SELECT cases.id\n   FROM cases)))",
+null
+],
+[
+"eval_cases",
+"eval_cases_select",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"eval_runs",
+"eval_runs_select",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"helper_assignments",
+"assign_delete",
+"DELETE",
+"((app.\"current_role\"() = 'admin'::text) OR ((app.\"current_role\"() = 'citizen'::text) AND (person_id = app.current_person_id())))",
+null
+],
+[
+"helper_assignments",
+"assign_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'admin'::text) OR ((app.\"current_role\"() = 'citizen'::text) AND (person_id = app.current_person_id()) AND (active = false)))"
+],
+[
+"helper_assignments",
+"assign_select_citizen",
+"SELECT",
+"(person_id = app.current_person_id())",
+null
+],
+[
+"helper_assignments",
+"assign_select_helper",
+"SELECT",
+"(helper_user_id = app.current_user_id())",
+null
+],
+[
+"helper_assignments",
+"assign_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"helper_assignments",
+"assign_update_admin",
+"UPDATE",
+"(app.\"current_role\"() = 'admin'::text)",
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"households",
+"households_select",
+"SELECT",
+"app.can_see_household(id)",
+null
+],
+[
+"households",
+"households_select_admin",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"labelled_cases",
+"labelled_select",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"people",
+"people_select",
+"SELECT",
+"app.can_see_person(id)",
+null
+],
+[
+"person_links",
+"links_select",
+"SELECT",
+"(app.can_see_person(a_id) OR app.can_see_person(b_id))",
+null
+],
+[
+"person_links",
+"links_select_admin",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"profiles",
+"profiles_insert_admin",
+"INSERT",
+null,
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"profiles",
+"profiles_select_own",
+"SELECT",
+"(user_id = app.current_user_id())",
+null
+],
+[
+"profiles",
+"profiles_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"profiles",
+"profiles_update_admin",
+"UPDATE",
+"(app.\"current_role\"() = 'admin'::text)",
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"profiles",
+"profiles_update_own",
+"UPDATE",
+"(user_id = app.current_user_id())",
+"(user_id = app.current_user_id())"
+],
+[
+"rule_sets",
+"rule_sets_delete",
+"DELETE",
+"((app.\"current_role\"() = 'admin'::text) AND (status = 'draft'::text))",
+null
+],
+[
+"rule_sets",
+"rule_sets_insert",
+"INSERT",
+null,
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"rule_sets",
+"rule_sets_select_public",
+"SELECT",
+"((status = 'active'::text) AND (app.\"current_role\"() = ANY (ARRAY['citizen'::text, 'admin'::text])))",
+null
+],
+[
+"rule_sets",
+"rule_sets_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"rule_sets",
+"rule_sets_update",
+"UPDATE",
+"(app.\"current_role\"() = 'admin'::text)",
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"rules",
+"rules_delete",
+"DELETE",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"rules",
+"rules_insert",
+"INSERT",
+null,
+"(app.\"current_role\"() = 'admin'::text)"
+],
+[
+"rules",
+"rules_select",
+"SELECT",
+"(rule_set_id IN ( SELECT rule_sets.id\n   FROM rule_sets))",
+null
+],
+[
+"scam_reports",
+"scam_insert",
+"INSERT",
+null,
+"((app.\"current_role\"() = ANY (ARRAY['citizen'::text, 'helper'::text, 'admin'::text])) AND (reported_by = app.current_user_id()))"
+],
+[
+"scam_reports",
+"scam_select_own",
+"SELECT",
+"(reported_by = app.current_user_id())",
+null
+],
+[
+"scam_reports",
+"scam_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"user_roles",
+"roles_delete_admin",
+"DELETE",
+"((app.\"current_role\"() = 'admin'::text) AND (user_id <> app.current_user_id()))",
+null
+],
+[
+"user_roles",
+"roles_insert_admin",
+"INSERT",
+null,
+"((app.\"current_role\"() = 'admin'::text) AND (user_id <> app.current_user_id()))"
+],
+[
+"user_roles",
+"roles_select_own",
+"SELECT",
+"(user_id = app.current_user_id())",
+null
+],
+[
+"user_roles",
+"roles_select_staff",
+"SELECT",
+"(app.\"current_role\"() = 'admin'::text)",
+null
+],
+[
+"user_roles",
+"roles_update_admin",
+"UPDATE",
+"((app.\"current_role\"() = 'admin'::text) AND (user_id <> app.current_user_id()))",
+"((app.\"current_role\"() = 'admin'::text) AND (user_id <> app.current_user_id()))"
+]
+]
