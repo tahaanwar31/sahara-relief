@@ -73,23 +73,24 @@
 
 ## 40. Honest limits (say these out loud)
 
-1. **All training and test data is synthetic.** The numbers show the **method works**, not how it performs on real people. We wrote the data generator, so the accuracy numbers measure how well the model learned **our own rules**.
-2. **The Urdu text needs a native speaker's check**, including the practice demo lines. The voices are computer voices and we have not listened to every file.
-3. **QR reading** needs a program that is not installed everywhere. The system asks for another photo instead of guessing.
-4. **The diary** could in theory be rewritten by someone with full database-owner power. Normal users and the admin cannot do it.
-5. **The hosted login mode** (Supabase Auth) is written but untested. The login we run is the local one.
-6. **Docker** is written but untested, and the app is **not deployed yet**.
-7. **No voice input.** The citizen listens and taps. Offline use was tested with a simulated cut in Chrome, not on a real phone. There is no "weak signal" state: the badge only says online or offline.
-8. **The ID card reader and face matcher** work on our fixed template card. The face cutoff (0.50) was set on a handful of AI-generated faces (Section 30.3). A real card needs a bigger model and a fairness test. Only Zainab has a registry photo; every other registry column is filled for every person.
-9. **The mock payment pays at once** after an automatic approval (`AUTO_SETTLE`); a real rail would confirm later.
-10. **Rate limiting** is in the service's memory. Fine for one server. A bigger system would use a shared store.
-11. **Small test sets.** The scam test has 56 messages, the identity test 10 pairs and the document test 21 images.
-12. **The helper consent proof** is her ID number, date of birth and household size. A keypad phone cannot approve anything, but these details are not secret: neighbours may know them. A real programme would add a one-time code sent by SMS to her registered mobile (needs a paid SMS gateway).
+1. **The helper-commission problem is only reduced, not solved.** Reports say some agents and helpers take a cut (Rs 1,000 to 2,000) from the woman's payment and she feels she cannot refuse. Software cannot stop a person asking for cash after the money has reached her account. *What we did:* the money goes to **her own** account, typed by her; a payout account that matches any helper's own number is held for a person; a helper needs her three details, holds one family at a time and cannot approve anything; everything is in the unchangeable diary. *What we did not do:* we cannot see who owns an account (only its shape is checked), and her three details are not secret. *Planned, not built:* an automatic phone call after every payout asking her whether she received the full amount (Section 41).
+2. **All training and test data is synthetic.** The numbers show the **method works**, not how it performs on real people. We wrote the data generator, so the accuracy numbers measure how well the model learned **our own rules**.
+3. **The Urdu text needs a native speaker's check**, including the practice demo lines. The voices are computer voices and we have not listened to every file.
+4. **QR reading** needs a program that is not installed everywhere. The system asks for another photo instead of guessing.
+5. **The diary** could in theory be rewritten by someone with full database-owner power. Normal users and the admin cannot do it.
+6. **The hosted login mode** (Supabase Auth) is written but untested. The login we run is the local one.
+7. **Hosting is the free plan**: a tenth of a CPU, memory close to the 512 MB limit in spikes, the instance sleeps when idle, and uploaded photos reset when it restarts. The Docker image works on Render but was never tested on a laptop. We have not load-tested the service.
+8. **No voice input.** The citizen listens and taps. Offline use was tested with a simulated cut in Chrome, not on a real phone. There is no "weak signal" state: the badge only says online or offline.
+9. **The ID card reader and face matcher** work on our fixed template card. The face cutoff (0.50) was set on a handful of AI-generated faces (Section 30.3). A real card needs a bigger model and a fairness test. Only Zainab has a registry photo; every other registry column is filled for every person.
+10. **The mock payment pays at once** after an automatic approval (`AUTO_SETTLE`); a real rail would confirm later.
+11. **Rate limiting** is in the service's memory. Fine for one server. A bigger system would use a shared store.
+12. **Small test sets.** The scam test has 56 messages, the identity test 10 pairs and the document test 21 images.
+13. **The helper consent proof** is her ID number, date of birth and household size. A keypad phone cannot approve anything, but these details are not secret: neighbours may know them. A real programme would add a one-time code sent by SMS to her registered mobile (needs a paid SMS gateway).
 
 ## 41. Future work
 
-- Deploy on Render and rehearse the live demo.
-- Test the Supabase login mode and the Docker image.
+- Rehearse the live demo on the Render link, and move to a plan with 1 GB or more of memory for headroom.
+- Test the Supabase login mode.
 - Native-speaker review of all Urdu text and audio.
 - Voice input in Urdu.
 - A stronger card reader for real Urdu and English CNICs, and a fairness test of the face model.

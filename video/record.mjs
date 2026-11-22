@@ -63,7 +63,12 @@ async function glide(x, y, steps = DRY ? 2 : 22) {
 }
 async function mclick(loc, { pause = 380 } = {}) {
   const l = loc.first(); await l.waitFor({ state: 'visible', timeout: 60000 }); await l.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' })).catch(() => {}); await sleep(250)
-  const b = await l.boundingBox(); await glide(b.x + b.width / 2, b.y + b.height / 2)
+  let b = await l.boundingBox(); await glide(b.x + b.width / 2, b.y + b.height / 2)
+  for (let k = 0; k < 3; k++) {   // the page can move while the cursor travels: aim again until the cursor is on the button
+    await sleep(120); b = await l.boundingBox(); const cx = b.x + b.width / 2, cy = b.y + b.height / 2
+    if (Math.abs(cx - mx) < 5 && Math.abs(cy - my) < 5) break
+    await glide(cx, cy, DRY ? 2 : 8)
+  }
   await sleep(120); await p.mouse.down(); await sleep(70); await p.mouse.up(); await sleep(pause)
 }
 async function tapDigits(digits, gap = 160) {
@@ -72,8 +77,8 @@ async function tapDigits(digits, gap = 160) {
 async function typeInto(loc, text, delay = 85) {
   await mclick(loc); await p.keyboard.type(text, { delay: DRY ? 0 : delay })
 }
-async function choose(file, label = /Choose a photo/) {
-  const [fc] = await Promise.all([p.waitForEvent('filechooser'), mclick(p.getByRole('button', { name: label }))])
+async function choose(file) {
+  const [fc] = await Promise.all([p.waitForEvent('filechooser'), mclick(p.locator('button', { hasText: 'Choose a photo' }))])
   await fc.setFiles(card(file))
 }
 async function say(key, action, lead = 0.8) {
@@ -118,6 +123,7 @@ async function claimFast(front, back = 'A2_back_CORRECT.jpg', acct = '0300990004
 }
 
 // ================================================================= the story
+try {
 console.log('API reset', await api('zainab', 'POST', '/demo/restart-claim'), await api('yousuf', 'POST', '/demo/reset-helper'))
 await p.goto(WEB + '#/login'); await p.locator('[data-testid=test-users]').first().waitFor({ timeout: 60000 })
 await card_('Sahara Relief', 'A relief-payment platform for a woman who cannot read, and the helper beside her')
@@ -163,7 +169,8 @@ await say('2_proof2', async () => {
   await mclick(p.getByRole('button', { name: /Check and record her permission/ })); await p.getByRole('button', { name: /Start helping/ }).waitFor({ timeout: 40000 })
 }, 0.4)
 await say('2_claim', async () => {
-  await mclick(p.getByRole('button', { name: /Start helping/ })); await p.getByTestId('step-2').waitFor({ timeout: 40000 }); await sleep(1800)
+  await mclick(p.getByRole('button', { name: /Start helping/ })); await p.getByTestId('step-1').waitFor({ timeout: 40000 }); await sleep(1200)
+  await mclick(p.getByRole('button', { name: /Yes, start|^Continue/ })); await p.getByTestId('step-2').waitFor({ timeout: 40000 }); await sleep(1800)
   await mclick(p.getByRole('button', { name: /^Next/ })); await p.getByTestId('docs-step').waitFor({ timeout: 60000 })
   await choose('A1_front_CORRECT.jpg'); await p.getByTestId('doc-title').filter({ hasText: /back of your ID card/ }).waitFor({ timeout: 60000 })
   await choose('A2_back_CORRECT.jpg'); await p.getByText('Photo received').waitFor({ timeout: 60000 }); await sleep(700); await mclick(p.getByRole('button', { name: /^Next/ }))
@@ -173,7 +180,7 @@ await say('2_acct', async () => {
   await p.getByTestId('step-7').waitFor({ timeout: 30000 }); await sleep(800); await mclick(p.getByRole('button', { name: /Send my claim/ }))
 }, 0.4)
 await say('2_result', async () => { await p.getByTestId('result-card').waitFor({ timeout: 90000 }) }, 0.2)
-await say('2_limit', async () => { await mclick(p.getByRole('button', { name: /^Done$/ })); await p.getByTestId('planned-safeguard').waitFor({ timeout: 30000 }); await scrollTo(p.getByTestId('planned-safeguard')) }, 0.6)
+await say('2_limit', async () => { await glide(640, 380) }, 0.5)
 
 // ----------------------------------------------------------------- 3. the faulty claim and the admin
 await say('3_reset', async () => { await api('zainab', 'POST', '/demo/restart-claim'); await api('yousuf', 'POST', '/demo/reset-helper'); await logout(); await login('zainab', /Zainab/); await english() })
@@ -214,6 +221,7 @@ await card_('Sahara Relief', 'Prototype on invented data. Two models trained by 
 await say('9_outro', async () => { await sleep(1500) }, 0)
 await sleep(1200)
 
+} catch (e) { console.log('STOPPED EARLY:', String(e.message).slice(0, 200)) }
 fs.writeFileSync(path.join(OUT, 'timeline.json'), JSON.stringify({ totalSeconds: Math.round(now() * 10) / 10, clips: timeline }, null, 1))
 console.log('total', Math.round(now()), 's, clips', timeline.length)
 await ctx.close(); await browser.close()

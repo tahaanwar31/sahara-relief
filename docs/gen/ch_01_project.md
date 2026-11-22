@@ -89,10 +89,10 @@ Other services we could have chosen (licence renewal, school admission, land tra
 | Swagger / OpenAPI with API keys | Swagger at `/docs`; public API needs `X-API-Key` | App. B |
 | Mock NADRA / NSER / Raast | Done (complete, realistic records; the NADRA record also holds a photo for the demo person) | Part 4 |
 | Challenges 1 to 8 | All done | Sections 8, 9, 10, 12, 15, 16, 21, 27 to 30 |
-| Bonus: Digital Twin, Helper Mode, offline sync | Done | Sections 6, 9, 12 |
+| Bonus: Digital Twin, Helper Mode, offline sync | Done and tested (**Scam Map: not built**) | Sections 6, 9, 12 |
 | Live demo | Ready (also fully offline on a laptop) | Section 22 |
 | README | Done | Section 22 |
-| GitHub, demo video, deployed link | **Still to do** | Section 22 |
+| GitHub, demo video, deployed link | GitHub public and deployed on Render (free plan) are **done**; the demo video is **still to do** | Section 22 |
 | Mock data only, labelled prototype | Done | Section 39 |
 
 ### 3.1 How the project maps to the judging rubric (100 points)
@@ -102,7 +102,7 @@ The organisers score six categories. This table says what we built for each and 
 | Category (points) | What we built | Manual | Not proven |
 |---|---|---|---|
 | **AI implementation (30)**: at least 3 working AI features, workflow, output quality, model choice | 10 AI features (decision model, scam checker, name matching, ID card reading, face match, photo integrity, notes, policy search, Digital Twin, recorded voice). They run inside one claim: hard rules first, then the model, then auto-approve, ask for proof, or a person. Two models trained by us, three open-source pretrained tools used as they come. | Part 5, Section 24A | All data is synthetic. No real photos or real SMS were tested. No language model is used. |
-| **SaaS and architecture (20)**: features, API, database, deployment, testing, monitoring | Three roles, queue, rule versions, public API with keys, FastAPI service, Postgres with row locks, hash-chained diary, 179 + 50 + 27 automated tests and a 23-check browser test, health and metrics pages | Parts 3, 4, 6 | **Not deployed yet.** The Docker image is untested. |
+| **SaaS and architecture (20)**: features, API, database, deployment, testing, monitoring | Three roles, queue, rule versions, public API with keys, FastAPI service, Postgres with row locks, hash-chained diary, 179 + 50 + 27 automated tests and a 23-check browser test, health and metrics pages | Parts 3, 4, 6 | **Deployed on Render's free plan** (Singapore): a tenth of a CPU, it sleeps when idle, and memory was measured at about 350 MB with spikes near 520 MB (limit 512 MB). |
 | **Real-world problem solving (15)**: needs, end-to-end completion, impact | A woman (or her helper) claims the payment end to end: consent, identity, household, papers, account, decision, money sent, staff call to confirm. The admin can ask for one more paper and the loop closes by itself. | Parts 1, 2 | Money is a mock. No real users were interviewed. |
 | **Accessibility (10)**: voice and language, low literacy, weak internet | Urdu and English on every screen, 154 recorded voice prompts, number pad, icons, practice demo before each page, offline outbox, saved steps, resume code | Sections 4 to 5, 11, 12, 19 | No voice input. The Urdu needs a native speaker's check. Offline was tested with a simulated cut in Chrome, not on a real phone. |
 | **Safety, privacy, reliability (15)**: uncertainty, consent, explainability, risk | "I am not sure" path to a person with notes, hard rules over any score, consent with take-back that stops access at once, helper three-detail proof, one sentence for her and a full trail for the auditor, safe retries, lockouts | Parts 3 and 5 (Sections 15, 16, 36) | The helper-commission problem is only reduced (a helper's own number is held, and a planned phone-call check is described). |

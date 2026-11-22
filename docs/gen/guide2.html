@@ -457,8 +457,8 @@
 <div class="lim"><div class="t"><h3>7. Weak internet was tested by simulation</h3><span class="chip c-amber">Medium</span></div>
   <p>We cut the connection in Chrome and the photo and the send waited and went through afterwards. We did not test on a real phone on a real network. The badge says only online or offline; there is no "weak signal" state.</p></div>
 
-<div class="lim"><div class="t"><h3>8. Not yet deployed; some paths untested</h3><span class="chip c-amber">Medium</span></div>
-  <p>The app is not on a public link yet. The Docker image is written but untested. The hosted-login mode (Supabase Auth) is written but untested; the login we run is the local one. Rate limiting lives in the service's memory, which is fine for one server only.</p></div>
+<div class="lim"><div class="t"><h3>8. Free hosting is weak; some paths untested</h3><span class="chip c-amber">Medium</span></div>
+  <p>The app is live on Render's free plan (https://sahara-relief.onrender.com): a tenth of a CPU, memory close to the 512 MB limit in spikes, it sleeps when idle, and uploaded photos reset when it restarts. The hosted-login mode (Supabase Auth) is written but untested; the login we run is the local one. Rate limiting lives in the service's memory, which is fine for one server only.</p></div>
 
 <div class="lim"><div class="t"><h3>9. The record itself</h3><span class="chip c-blue">Low</span></div>
   <p>The diary cannot be changed by users or admins, but someone with full database-owner power could rewrite it. Helper proof by ID number, birth date and household size is not a secret; a one-time SMS code to her registered phone would be stronger. The scam checker only warns, by design.</p></div>
@@ -470,7 +470,7 @@
 
 <div class="road">
   <div class="ph"><h4>Phase 1: Pilot</h4><div class="scale">one district, thousands of women</div>
-    <ul><li>Real identity, survey and payment connections replace the three mocks (one adapter each)</li><li>Test the card reader on real photos; fairness check on the face model</li><li>Native Urdu review; add Sindhi and Pashto</li><li>Deploy on Render with Supabase; real phones on real networks</li><li>Build and test the payout confirmation call</li></ul></div>
+    <ul><li>Real identity, survey and payment connections replace the three mocks (one adapter each)</li><li>Test the card reader on real photos; fairness check on the face model</li><li>Native Urdu review; add Sindhi and Pashto</li><li>Move from the free plan to one with 1 GB or more of memory; test on real phones on real networks</li><li>Build and test the payout confirmation call</li></ul></div>
   <div class="ph"><h4>Phase 2: Province</h4><div class="scale">hundreds of thousands</div>
     <ul><li>Several service copies behind a load balancer (the service keeps no state)</li><li>Move rate limits to a shared store such as Redis</li><li>Photo analysis in background workers; photos in object storage, not local disk</li><li>Database connection pooler and read replicas; split big tables by quarter</li><li>Voice input in Urdu; USSD or SMS for keypad phones</li></ul></div>
   <div class="ph"><h4>Phase 3: National</h4><div class="scale">millions of households</div>

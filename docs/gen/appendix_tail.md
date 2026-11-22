@@ -24,7 +24,7 @@ Copy `.env.example` to `.env` and fill it in. **Never commit `.env`.**
 sahara-relief/
   README.md             The short project description
   CONTRACT.md           The agreement between web, service and database
-  Dockerfile            One image: service + built web app (untested)
+  Dockerfile            One image: service + built web app (runs on Render)
   docker-compose.yml    Database + app on one machine (untested)
   .env.example          Settings template
   shared/

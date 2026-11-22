@@ -274,11 +274,11 @@ Put the Session pooler connection string in `.env` as `DATABASE_URL` and set `DB
 
 | Piece | Plan |
 |---|---|
-| **Hosting** | One Docker image holding the Python service **and** the built web app, deployed on **Render** (Singapore or Mumbai, near the database) |
+| **Hosting** | One Docker image holding the Python service **and** the built web app, deployed on **Render's free plan** (Singapore, near the Mumbai database) at https://sahara-relief.onrender.com |
 | **Database** | Supabase Mumbai |
 | **Why not Vercel** | Vercel suits websites and short functions. Our service is a long-running Python program that loads AI models, so it would restart cold and hit size limits |
 | **Fallback** | The whole system on a laptop, with the local database, tested on a phone hotspot |
-| **Status** | The Docker image is written but **not tested yet** (no Docker on the build laptop). The app is **not deployed yet** |
+| **Status** | **Live.** The first cloud build worked. Settings: `DATABASE_URL`, `JWT_SECRET`, `AUTH_MODE=local`, `DB_SERIALIZE=0`. Measured: about 350 MB of memory in normal use with spikes near 520 MB against the free 512 MB limit; twelve card uploads in a row plus a full submit ran with no restart; about 2.6 to 3 s per photo and about 13 s for a cold submit on the tenth of a CPU. The instance sleeps after about 15 minutes idle and takes about a minute to wake; uploaded photos live on its disk and reset when it restarts; the app's request limit is 75 seconds so a waking server is not mistaken for no signal |
 
 ### 22.4 Demo checklist
 

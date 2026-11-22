@@ -89,10 +89,10 @@ Other services we could have chosen (licence renewal, school admission, land tra
 | Swagger / OpenAPI with API keys | Swagger at `/docs`; public API needs `X-API-Key` | App. B |
 | Mock NADRA / NSER / Raast | Done (complete, realistic records; the NADRA record also holds a photo for the demo person) | Part 4 |
 | Challenges 1 to 8 | All done | Sections 8, 9, 10, 12, 15, 16, 21, 27 to 30 |
-| Bonus: Digital Twin, Helper Mode, offline sync | Done | Sections 6, 9, 12 |
+| Bonus: Digital Twin, Helper Mode, offline sync | Done and tested (**Scam Map: not built**) | Sections 6, 9, 12 |
 | Live demo | Ready (also fully offline on a laptop) | Section 22 |
 | README | Done | Section 22 |
-| GitHub, demo video, deployed link | **Still to do** | Section 22 |
+| GitHub, demo video, deployed link | GitHub public and deployed on Render (free plan) are **done**; the demo video is **still to do** | Section 22 |
 | Mock data only, labelled prototype | Done | Section 39 |
 
 ### 3.1 How the project maps to the judging rubric (100 points)
@@ -102,7 +102,7 @@ The organisers score six categories. This table says what we built for each and 
 | Category (points) | What we built | Manual | Not proven |
 |---|---|---|---|
 | **AI implementation (30)**: at least 3 working AI features, workflow, output quality, model choice | 10 AI features (decision model, scam checker, name matching, ID card reading, face match, photo integrity, notes, policy search, Digital Twin, recorded voice). They run inside one claim: hard rules first, then the model, then auto-approve, ask for proof, or a person. Two models trained by us, three open-source pretrained tools used as they come. | Part 5, Section 24A | All data is synthetic. No real photos or real SMS were tested. No language model is used. |
-| **SaaS and architecture (20)**: features, API, database, deployment, testing, monitoring | Three roles, queue, rule versions, public API with keys, FastAPI service, Postgres with row locks, hash-chained diary, 179 + 50 + 27 automated tests and a 23-check browser test, health and metrics pages | Parts 3, 4, 6 | **Not deployed yet.** The Docker image is untested. |
+| **SaaS and architecture (20)**: features, API, database, deployment, testing, monitoring | Three roles, queue, rule versions, public API with keys, FastAPI service, Postgres with row locks, hash-chained diary, 179 + 50 + 27 automated tests and a 23-check browser test, health and metrics pages | Parts 3, 4, 6 | **Deployed on Render's free plan** (Singapore): a tenth of a CPU, it sleeps when idle, and memory was measured at about 350 MB with spikes near 520 MB (limit 512 MB). |
 | **Real-world problem solving (15)**: needs, end-to-end completion, impact | A woman (or her helper) claims the payment end to end: consent, identity, household, papers, account, decision, money sent, staff call to confirm. The admin can ask for one more paper and the loop closes by itself. | Parts 1, 2 | Money is a mock. No real users were interviewed. |
 | **Accessibility (10)**: voice and language, low literacy, weak internet | Urdu and English on every screen, 154 recorded voice prompts, number pad, icons, practice demo before each page, offline outbox, saved steps, resume code | Sections 4 to 5, 11, 12, 19 | No voice input. The Urdu needs a native speaker's check. Offline was tested with a simulated cut in Chrome, not on a real phone. |
 | **Safety, privacy, reliability (15)**: uncertainty, consent, explainability, risk | "I am not sure" path to a person with notes, hard rules over any score, consent with take-back that stops access at once, helper three-detail proof, one sentence for her and a full trail for the auditor, safe retries, lockouts | Parts 3 and 5 (Sections 15, 16, 36) | The helper-commission problem is only reduced (a helper's own number is held, and a planned phone-call check is described). |
@@ -812,11 +812,11 @@ Put the Session pooler connection string in `.env` as `DATABASE_URL` and set `DB
 
 | Piece | Plan |
 |---|---|
-| **Hosting** | One Docker image holding the Python service **and** the built web app, deployed on **Render** (Singapore or Mumbai, near the database) |
+| **Hosting** | One Docker image holding the Python service **and** the built web app, deployed on **Render's free plan** (Singapore, near the Mumbai database) at https://sahara-relief.onrender.com |
 | **Database** | Supabase Mumbai |
 | **Why not Vercel** | Vercel suits websites and short functions. Our service is a long-running Python program that loads AI models, so it would restart cold and hit size limits |
 | **Fallback** | The whole system on a laptop, with the local database, tested on a phone hotspot |
-| **Status** | The Docker image is written but **not tested yet** (no Docker on the build laptop). The app is **not deployed yet** |
+| **Status** | **Live.** The first cloud build worked. Settings: `DATABASE_URL`, `JWT_SECRET`, `AUTH_MODE=local`, `DB_SERIALIZE=0`. Measured: about 350 MB of memory in normal use with spikes near 520 MB against the free 512 MB limit; twelve card uploads in a row plus a full submit ran with no restart; about 2.6 to 3 s per photo and about 13 s for a cold submit on the tenth of a CPU. The instance sleeps after about 15 minutes idle and takes about a minute to wake; uploaded photos live on its disk and reset when it restarts; the app's request limit is 75 seconds so a waking server is not mistaken for no signal |
 
 ### 22.4 Demo checklist
 
@@ -880,6 +880,82 @@ One row per feature. The details and the numbers are in the sections named in th
 **How the pieces work together in one claim:** hard rules run first and no score can beat them; the checks above (identity, card, face, photo integrity, household score, payout, scam) each give Pass, Not sure or Fail; the decision model weighs the soft signals; then the engine allows auto-approval only above 0.97 with no flag. Anything else goes to a person with the "I am not sure" notes.
 
 **Where they are strong and where they are not.** The card reading, face match, name matching and photo checks do real work a clerk does today and caught every planted mistake in our tests. The decision model's confidence is only as good as its synthetic training data, so it shows the machinery works but is not proof of who is truly eligible. The scam checker was trained on messages we wrote. The notes, search and Digital Twin are useful tools but not learning.
+
+## 24B. The three AI features to test in the demo
+
+Judges are asked to test at least three AI features. These are the three we point them to. For each one: what to do in the demo, what the system does step by step, the numbers behind it, and where it stops working. The deeper sections are named in each heading.
+
+### 24B.1 Computer vision: reading and checking the ID card (Section 30)
+
+**Try it.** Log in as Zainab. Upload `A1` (front) and `A2` (back): approved and paid. Press the reset icon and upload `B1` (wrong name), `B2` (wrong number) or `B3` (wrong face) as the front: the claim goes to a person with the exact reason, and the admin sees the differences in red. Also upload the front where the back belongs: the screen says which side to send.
+
+**What the system does with each photo**
+
+1. **File check.** Only photos (jpeg or png) or a pdf within the size limit. Anything else is refused.
+2. **Photo integrity.** *Blur:* a sharpness score (variance of the Laplacian); a blurry photo gets "please take it again". *Editing:* error-level analysis (a pasted region compresses differently) and the file's software tag. *Duplicates:* a fingerprint of the file and a fingerprint of the picture are compared with other people's papers. The same card sent by **two different people** raises a hard flag and an admin cannot approve it. A person's own retakes never count. *QR:* read where a QR exists (our sample cards have none).
+3. **Which side?** The OCR text of the front has the labels Name, Father Name, Date of Birth and Identity Number; the back has Permanent Address, Present Address and Date of Issue. A wrong side is not accepted.
+4. **Reading the front.** RapidOCR reads each label and the value under it, and pulls out the name, father's name, date of birth, expiry and the 13-digit number (dashes ignored, look-alike digits corrected).
+5. **Comparing with the government record.** *Number:* digit by digit. *Name:* ignoring case and spaces, a small slip is accepted at 88% letter similarity. *Face:* YuNet finds the face on the card, SFace turns it into 128 numbers, and the cosine similarity with the registry photo must be **0.50 or more**.
+6. **The outcome.** Seven mismatch combinations (face, name, number in any mix) each have their own reason code (Section 30.4); an unreadable card or no face asks for a clearer photo. Every mismatch says a staff member will check. The admin's side-by-side table adds a column "Her ID card photo" and a face row.
+
+**Numbers.** Face line 0.50, chosen on test faces: different people scored up to 0.41, the same person on a card-sized noisy print 0.78 to 0.84. The photo checks classed 21 of 21 invented images as expected. About 2.6 to 3 seconds per photo on the free host's tenth of a CPU (faster on a laptop); about 350 MB of memory in normal use.
+
+**Where it stops.** One fixed English card layout and clean sample photos; the face line was set on AI-generated faces and needs a fairness test; only Zainab has a registry photo (for others the face check is skipped, never guessed); QR is not demonstrated; edit detection is a heuristic a skilled forger would pass.
+
+### 24B.2 Classification and routing: approve, ask, or hand to a person (Sections 15, 27, 28)
+
+**Try it.** A correct claim goes **green** (approved and paid). A wrong card goes **blue**, "A person will look", with the reason. A blurry or missing paper goes **yellow**, "Please send one more thing". The admin queue lists only the blue ones, least sure first.
+
+**What the system does**
+
+1. **Gathers the facts** about the claim: the person, household, payout account, papers, the name-match result and the card comparison.
+2. **Hard rules** (Section 15.2) run first.
+3. **Checks** each give Pass, Not sure or Fail.
+4. **The decision model** turns 21 numbers into one calibrated probability, `p_eligible`.
+5. **Routing.** *Approve alone* only if `p_eligible` is at least **0.97**, no rule fired and no check is unsure. *Ask for proof* when one clear thing is missing: the screen names the paper and the claim loops back after she sends it. *Hand to a person* for everything else, which is the safe default. Below 0.15 it still goes to a person, because **auto-reject is off**.
+6. **The queue** puts the least sure case first and attaches the "I am not sure" notes.
+
+A second classifier sorts **SMS messages** into safe, careful or scam (score of at least 0.62 is scam, at least 0.30 is careful; a direct ask for a PIN, OTP or ID number is never labelled safe).
+
+**Numbers.** The 0.97 line is calculated, not guessed: 1 − (cost of a person reviewing ÷ cost of a wrong approval) = 1 − 3/100. The decision model is a logistic regression with isotonic calibration, trained on 12,000 synthetic cases (fixed seed). On 2,000 fresh cases: 37.9% approved alone, 55.9% to a person, 6.3% asked for proof; 14 wrong approvals out of 758; 0 wrong rejections; about 6.6 ms a decision. The scam classifier scored 92.9% on 56 test messages, with 1 false alarm in 27 safe messages and 1 missed scam.
+
+**Where it stops.** Trained and tested on data from the same generator, so it shows the machinery works, not who is truly eligible. The household cutoff and amounts are invented.
+
+### 24B.3 Guardrails and human approval (Sections 15.2, 17, 36)
+
+**Try it.** (a) Upload a wrong card: it is never approved. (b) As admin, try to approve a claim with an open hard flag (for example the same photo sent by two people): the database refuses. (c) The citizen takes back her permission: the admin is blocked at once. (d) A payment over Rs 20,000 needs a second admin. (e) A payout account that matches a helper's own number is held.
+
+**The layers, from the outside in**
+
+1. **Hard rules before any score** (15 of them: consent, ID validity, deceased, duplicate identity, payout cap, shared, changed or helper-owned account, scam flag, edited paper, household mismatch, someone else's ID, unreadable or mismatched card).
+2. **The approval line** of 0.97, and no unsure check, before the machine acts alone.
+3. **Disagreement or a missing fact** goes to a person: missing never means pass.
+4. **Auto-reject is off**: the machine never says "no" alone.
+5. **Human approval:** an admin decides every held case; payments above Rs 20,000 need a second, different admin.
+6. **The database refuses** what the code might miss: approving with an open hard flag, approving your own or a helped case, deciding after consent was withdrawn, editing a decision or the diary.
+7. **Everything is recorded:** rule version, model version, inputs (as a hash), every check, the full trace and the confidence, in a diary nobody can change.
+
+Layered on purpose: if one layer has a bug, the next one still stops the mistake.
+
+**Where it stops.** A guardrail is only as good as its rules, and the rules are ours. Someone with full database-owner power could rewrite the diary. The helper-commission problem is only reduced (Section 40).
+
+## 24C. The judges' AI checklist: what we have and what we do not
+
+| Feature | Have it? | What exists, accurately |
+|---|---|---|
+| RAG | **No** | Policy search (Section 31) retrieves the matching clause and shows it as the source. No language model writes an answer from it, so it is retrieval, not RAG |
+| Autonomous agents and tool calling | **No** | The pipeline is a fixed set of checks in a fixed order. There is no agent and no model that calls tools |
+| Classification and routing | **Yes** | Decision model and zones (24B.2); scam classifier |
+| Computer vision (OCR, forgery, QR) | **Yes** | ID card reading, face match, edit detection, duplicates (24B.1). QR exists in the code but is not demonstrated |
+| Voice (speech-to-text, text-to-speech) | **Half** | Text-to-speech: 154 recorded Urdu and English prompts. Speech-to-text: no, we cut it |
+| Structured outputs | **Yes** | Every decision is a validated record: zone, result, reason code, confidence, checks, trace and next step. All API errors share one shape. They come from our engine, not from a language model (the optional model wrapper is switched off, and would be refused if its output did not fit the schema) |
+| Guardrails and human approval | **Yes** | 24B.3 |
+| Explainability | **Yes** | A plain reason in her language, every check with its result, the full trace, the notes, and the model and rule version on each decision |
+| Anomaly detection | **No** | No anomaly model. The nearest are rule checks: a reused photo, a shared payout account, an account changed in the last 30 days |
+| Memory and context | **Partial** | The system remembers a claim's saved progress and resume code, her earlier payout account, how many times proof was asked (after two it goes to a person), consent history and past similar cases. This is stored data, not an AI memory of conversations |
+| Evaluation dashboard | **Yes** | Accuracy, confusion matrix, false alarms, speed and the cost curve (Section 9). If the database was reset, press **Run the evaluation** once |
+
+**Bonus features:** Digital Twin, Helper Mode and Offline-First Sync are built and tested. **The Scam Map was not built.**
 
 ## 25. Core ideas
 
@@ -1300,23 +1376,24 @@ The decision model is trained by `engine/model.py` (`train()`), and the scam mod
 
 ## 40. Honest limits (say these out loud)
 
-1. **All training and test data is synthetic.** The numbers show the **method works**, not how it performs on real people. We wrote the data generator, so the accuracy numbers measure how well the model learned **our own rules**.
-2. **The Urdu text needs a native speaker's check**, including the practice demo lines. The voices are computer voices and we have not listened to every file.
-3. **QR reading** needs a program that is not installed everywhere. The system asks for another photo instead of guessing.
-4. **The diary** could in theory be rewritten by someone with full database-owner power. Normal users and the admin cannot do it.
-5. **The hosted login mode** (Supabase Auth) is written but untested. The login we run is the local one.
-6. **Docker** is written but untested, and the app is **not deployed yet**.
-7. **No voice input.** The citizen listens and taps. Offline use was tested with a simulated cut in Chrome, not on a real phone. There is no "weak signal" state: the badge only says online or offline.
-8. **The ID card reader and face matcher** work on our fixed template card. The face cutoff (0.50) was set on a handful of AI-generated faces (Section 30.3). A real card needs a bigger model and a fairness test. Only Zainab has a registry photo; every other registry column is filled for every person.
-9. **The mock payment pays at once** after an automatic approval (`AUTO_SETTLE`); a real rail would confirm later.
-10. **Rate limiting** is in the service's memory. Fine for one server. A bigger system would use a shared store.
-11. **Small test sets.** The scam test has 56 messages, the identity test 10 pairs and the document test 21 images.
-12. **The helper consent proof** is her ID number, date of birth and household size. A keypad phone cannot approve anything, but these details are not secret: neighbours may know them. A real programme would add a one-time code sent by SMS to her registered mobile (needs a paid SMS gateway).
+1. **The helper-commission problem is only reduced, not solved.** Reports say some agents and helpers take a cut (Rs 1,000 to 2,000) from the woman's payment and she feels she cannot refuse. Software cannot stop a person asking for cash after the money has reached her account. *What we did:* the money goes to **her own** account, typed by her; a payout account that matches any helper's own number is held for a person; a helper needs her three details, holds one family at a time and cannot approve anything; everything is in the unchangeable diary. *What we did not do:* we cannot see who owns an account (only its shape is checked), and her three details are not secret. *Planned, not built:* an automatic phone call after every payout asking her whether she received the full amount (Section 41).
+2. **All training and test data is synthetic.** The numbers show the **method works**, not how it performs on real people. We wrote the data generator, so the accuracy numbers measure how well the model learned **our own rules**.
+3. **The Urdu text needs a native speaker's check**, including the practice demo lines. The voices are computer voices and we have not listened to every file.
+4. **QR reading** needs a program that is not installed everywhere. The system asks for another photo instead of guessing.
+5. **The diary** could in theory be rewritten by someone with full database-owner power. Normal users and the admin cannot do it.
+6. **The hosted login mode** (Supabase Auth) is written but untested. The login we run is the local one.
+7. **Hosting is the free plan**: a tenth of a CPU, memory close to the 512 MB limit in spikes, the instance sleeps when idle, and uploaded photos reset when it restarts. The Docker image works on Render but was never tested on a laptop. We have not load-tested the service.
+8. **No voice input.** The citizen listens and taps. Offline use was tested with a simulated cut in Chrome, not on a real phone. There is no "weak signal" state: the badge only says online or offline.
+9. **The ID card reader and face matcher** work on our fixed template card. The face cutoff (0.50) was set on a handful of AI-generated faces (Section 30.3). A real card needs a bigger model and a fairness test. Only Zainab has a registry photo; every other registry column is filled for every person.
+10. **The mock payment pays at once** after an automatic approval (`AUTO_SETTLE`); a real rail would confirm later.
+11. **Rate limiting** is in the service's memory. Fine for one server. A bigger system would use a shared store.
+12. **Small test sets.** The scam test has 56 messages, the identity test 10 pairs and the document test 21 images.
+13. **The helper consent proof** is her ID number, date of birth and household size. A keypad phone cannot approve anything, but these details are not secret: neighbours may know them. A real programme would add a one-time code sent by SMS to her registered mobile (needs a paid SMS gateway).
 
 ## 41. Future work
 
-- Deploy on Render and rehearse the live demo.
-- Test the Supabase login mode and the Docker image.
+- Rehearse the live demo on the Render link, and move to a plan with 1 GB or more of memory for headroom.
+- Test the Supabase login mode.
 - Native-speaker review of all Urdu text and audio.
 - Voice input in Urdu.
 - A stronger card reader for real Urdu and English CNICs, and a fairness test of the face model.
@@ -1632,7 +1709,7 @@ Copy `.env.example` to `.env` and fill it in. **Never commit `.env`.**
 sahara-relief/
   README.md             The short project description
   CONTRACT.md           The agreement between web, service and database
-  Dockerfile            One image: service + built web app (untested)
+  Dockerfile            One image: service + built web app (runs on Render)
   docker-compose.yml    Database + app on one machine (untested)
   .env.example          Settings template
   shared/
