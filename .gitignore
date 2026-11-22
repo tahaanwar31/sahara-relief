@@ -16,3 +16,4 @@ service/storage/
 .sb-*
 .layout.log
 web/scripts/_*
+deploy/
