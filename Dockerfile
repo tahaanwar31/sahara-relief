@@ -20,7 +20,7 @@ COPY shared/ ./shared/
 COPY db/ ./db/
 COPY --from=web /web/dist ./web/dist
 # keep memory small on a free 512 MB host: one thread per maths library, one worker
-ENV PYTHONUNBUFFERED=1 WEB_DIST=/app/web/dist OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 ORT_NUM_THREADS=1
+ENV PYTHONUNBUFFERED=1 WEB_DIST=/app/web/dist OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 ORT_NUM_THREADS=1 MALLOC_ARENA_MAX=2 MALLOC_TRIM_THRESHOLD_=100000
 EXPOSE 8000
 # the host (Railway, Render) tells us the port in $PORT
 CMD ["sh", "-c", "python -m uvicorn service.app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
