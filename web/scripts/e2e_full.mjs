@@ -80,6 +80,14 @@ try {
     assert.equal(names.length, 3, names.join('|'))
   })
 
+  await check('login page on a phone shows the three demo accounts, and one box only', async () => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true }); pages.push(ctx)
+    const p = await ctx.newPage(); await p.goto(WEB + 'login'); await p.waitForTimeout(2500)
+    const boxes = p.getByTestId('test-users'); let shown = 0, names = []
+    for (let i = 0; i < await boxes.count(); i++) if (await boxes.nth(i).isVisible()) { shown++; names = await boxes.nth(i).getByRole('button').allInnerTexts() }
+    assert.equal(shown, 1, 'exactly one demo box is visible'); assert.equal(names.length, 3, names.join('|'))
+  })
+
   // ---------------------------------------------------------------- 1b. the practice demo before each page
   await check('tutorial: demo plays first on its own practice card, sends nothing, does not move her on; she then does it herself', async () => {
     await reset()

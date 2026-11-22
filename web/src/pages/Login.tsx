@@ -43,7 +43,7 @@ export default function Login({ expired }: { expired?: boolean }) {
 
   const demoBlock = (dark: boolean) => (
         
-          <div className={dark ? 'relative mt-7 rounded-3xl bg-white/10 p-4' : 'mt-5 card bg-white/70 border-dashed lg:hidden'} data-testid="test-users">
+          <div className={dark ? 'relative mt-7 rounded-3xl bg-white/10 p-4' : 'mb-3 card !p-3 bg-white/70 border-dashed lg:hidden'} data-testid="test-users">
             <p className={`text-sm font-semibold mb-2 ${dark ? 'text-white/70' : 'text-muted'}`}>Demo accounts: one tap to log in (all fake data)</p>
             <div className="flex flex-wrap gap-2">
               {TEST_USERS.map((u) => (
@@ -90,6 +90,9 @@ export default function Login({ expired }: { expired?: boolean }) {
           </div>
           <div className="flex items-center gap-2"><SignalPill /><LangToggle /></div>
         </div>
+
+        {/* phones: the demo accounts sit above the form (on a computer they are in the dark panel on the left) */}
+        {demoBlock(false)}
 
         <div className="card !p-[clamp(14px,2.4vh,20px)]">
           <div className="flex items-start justify-between gap-3">
